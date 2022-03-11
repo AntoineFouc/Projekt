@@ -1,4 +1,3 @@
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,13 +7,18 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	public Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();	// taille de l ecran
 	final ImageIcon icon = new ImageIcon("map.png");
+	private Timer timer;
+	private int dt = 20;
+	private int time;
 
+	private JButton start;
 
 
 	public Frame(){
 		setTitle("K-Roof");
 		setLayout(null);
 		setExtendedState(this.MAXIMIZED_BOTH);
+		//setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -38,11 +42,29 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.setBounds(800, 0, getSize().width-800, getSize().height);
 		add(p2);
 
+		start = new JButton("Commencer");
+		start.setBounds(100,50,200,50);
+		start.addActionListener(this);
+		p2.add(start);
+
+
+		addMouseListener(this);
+
+		timer = new Timer(dt,this);
+		time=0;
+
+
+
+
 	}
 
-
-
-	public void actionPerformed(ActionEvent e){}
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource() == timer){
+			time += dt;
+		}else if(e.getSource() == start){
+			timer.start();
+		}
+	}
 
 	public void mouseEntered(MouseEvent e){}
 
