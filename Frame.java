@@ -6,52 +6,38 @@ import java.awt.event.*;
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
-	public Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	public int screenWidth = screenSize.width;
-	public int screenHeight = (int) (0.9*screenSize.height);
-	private int boxSize = 10;			// taille d une case en pixels
-	private int p1Size = screenHeight - screenHeight%10;			// taille panneau affichage en nombre de box
+	public Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();	// taille de l ecran
+	final ImageIcon icon = new ImageIcon("map.png");
+
 
 
 	public Frame(){
 		setTitle("K-Roof");
 		setLayout(null);
-
-		setSize(screenWidth, screenHeight);
+		setExtendedState(this.MAXIMIZED_BOTH);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
 		// Panneau affichage
 		JPanel p1 = new JPanel();
 		p1.setLayout(null);
-		p1.setBackground(new Color(20, 150, 20));
-		p1.setBounds(0, 0, p1Size, p1Size);
+		p1.setBounds(0, 0, 800, getSize().height);
 
-                Grass g = new Grass(this,2,3);
-                p1.add(g);
-     
-	
+		JLabel map = new JLabel(new ImageIcon("map.png"));			// image du carrefour
+		map.setBounds(0,0,800,800);
+		p1.add(map);
+
+
+    	add(p1);
 
 		// Panneau interface
 		JPanel p2 = new JPanel();
 		p2.setLayout(null);
-		p2.setBackground(new Color(230, 230, 230));
-		p2.setBounds(p1Size, 0, screenWidth-p1Size, p1Size);
+		p2.setBackground(new Color(60, 60, 230));
+		p2.setBounds(800, 0, getSize().width-800, getSize().height);
 		add(p2);
 
-	}
-
-	// Affiche la case d'une certaine couleur
-	/*public void setBoxColor(Color c){
-
-	}*/
-
-	public int getP1Size(){
-		return p1Size;
-	}
-
-	public int getBoxSize(){
-		return boxSize;
 	}
 
 
