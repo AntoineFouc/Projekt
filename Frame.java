@@ -10,7 +10,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public int screenWidth = screenSize.width;
 	public int screenHeight = (int) (0.9*screenSize.height);
 	private int boxSize = 10;			// taille d une case en pixels
-	private int p1Size = (screenHeight - screenHeight)%10;			// taille panneau affichage en nombre de box
+	private int p1Size = screenHeight - screenHeight%10;			// taille panneau affichage en nombre de box
 
 
 	public Frame(){
@@ -27,16 +27,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p1.setBackground(new Color(20, 150, 20));
 		p1.setBounds(0, 0, p1Size, p1Size);
 
-
-		/*Grass b = new Grass(50,50);
-		JLabel l = new JLabel(b.picture);
-		l.setLocation(b.x,b.y);
-
-		p1.add(l);
-
-
-
-		add(p1);*/
+                Grass g = new Grass(this,2,3);
+                p1.add(g);
+     
+	
 
 		// Panneau interface
 		JPanel p2 = new JPanel();
