@@ -10,7 +10,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public int screenWidth = screenSize.width;
 	public int screenHeight = (int) (0.9*screenSize.height);
 	private int boxSize = 10;			// taille d une case en pixels
-	private int p1Size = screenHeight - screenHeight%10;			// taille panneau affichage
+	private int p1Size = (screenHeight - screenHeight)%10;			// taille panneau affichage en nombre de box
 
 
 	public Frame(){
@@ -26,7 +26,17 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p1.setLayout(null);
 		p1.setBackground(new Color(20, 150, 20));
 		p1.setBounds(0, 0, p1Size, p1Size);
-		add(p1);
+
+
+		/*Grass b = new Grass(50,50);
+		JLabel l = new JLabel(b.picture);
+		l.setLocation(b.x,b.y);
+
+		p1.add(l);
+
+
+
+		add(p1);*/
 
 		// Panneau interface
 		JPanel p2 = new JPanel();
@@ -38,9 +48,19 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	}
 
 	// Affiche la case d'une certaine couleur
-	public void setBoxColor(Color c){
+	/*public void setBoxColor(Color c){
 
+	}*/
+
+	public int getP1Size(){
+		return p1Size;
 	}
+
+	public int getBoxSize(){
+		return boxSize;
+	}
+
+
 
 	public void actionPerformed(ActionEvent e){}
 
