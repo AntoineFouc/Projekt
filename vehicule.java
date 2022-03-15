@@ -1,13 +1,24 @@
-public class vehicule {
-	int[] position;
-	String type;
+public class Vehicule {
+	private int[] position;		// x y
+	private double speed;
+	private int[] size;			// taille largeur puis longueur
+	private Road road;
+
 	
 	
-	public vehicule(String type, int[][]position) {
-		
+	public Vehicule(double s, Road r){
+		speed = s;			// vitesse initiale
+		road = r;
+		// position initiale dépendant de la voie
+
 	}
+
 	public int[] getPosition(){
-		return this.position;
+		return position;
+	}
+
+	public double getSpeed(){
+		return speed;
 	}
 	
 }
