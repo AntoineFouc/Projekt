@@ -1,16 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Image;
 import java.awt.event.*;
 
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
 	final ImageIcon icon = new ImageIcon("map.png");
-	private Timer timer;
-	private int dt = 20;
-	private int time;
-
+	// private Timer timer;
+	// private int dt = 20;
+	// private int time;
+	private DisplayPanel p1;
 	private JButton start;
 
 
@@ -18,19 +17,19 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		setTitle("K-Roof");
 		setLayout(null);
 		setSize(1100,800);
-		// setResizable(false);
+		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
 		// Panneau affichage
-		JPanel p1 = new JPanel();
+		p1 = new DisplayPanel();
 		p1.setLayout(null);
 		p1.setBounds(0,0,800,800);
 
-		JLabel map = new JLabel(new ImageIcon("map.png"));			// image du carrefour
-		map.setBounds(0,0,800,800);
-		p1.add(map);
+		// JLabel map = new JLabel(new ImageIcon("map.png"));			// image du carrefour
+		// map.setBounds(0,0,800,800);
+		// p1.add(map);
 
 
     	add(p1);
@@ -47,20 +46,12 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		start.addActionListener(this);
 		p2.add(start);
 
-		timer = new Timer(dt,this);
-		time=0;
-
-
 
 
 	}
 
 	public void actionPerformed(ActionEvent e){
-		if(e.getSource() == timer){
-			time += dt;
-		}else if(e.getSource() == start){
-			timer.start();
-		}
+		if(e.getSource() == start) p1.getTimer().start();
 	}
 
 	public void mouseEntered(MouseEvent e){}
