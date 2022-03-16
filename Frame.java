@@ -5,12 +5,10 @@ import java.awt.event.*;
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
-
+	// Initialisation vehicules et routes (a mettre ailleurs plus tard)
 	public Road road1 = new Road(0,375,800,375);
 	public Car car1 = new Car(0.3,road1);
 
-
-	final ImageIcon icon = new ImageIcon("map.png");
 	private DisplayPanel p1;
 	private JButton start;
 
@@ -45,7 +43,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	}
 
 	public void actionPerformed(ActionEvent e){
-		if(e.getSource() == start) p1.getTimer().start();
+		if(e.getSource() == start) p1.getTimer().start(); // commence le chrono dans p1 (DisplayPanel) lorsqu'on appuie sur le bouton
 	}
 
 	public void mouseEntered(MouseEvent e){}
