@@ -11,9 +11,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 
 	final ImageIcon icon = new ImageIcon("map.png");
-	// private Timer timer;
-	// private int dt = 20;
-	// private int time;
 	private DisplayPanel p1;
 	private JButton start;
 
@@ -31,11 +28,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p1 = new DisplayPanel(this);
 		p1.setLayout(null);
 		p1.setBounds(0,0,800,800);
-
-		// JLabel map = new JLabel(new ImageIcon("map.png"));			// image du carrefour
-		// map.setBounds(0,0,800,800);
-		// p1.add(map);
-
 
     	add(p1);
 
