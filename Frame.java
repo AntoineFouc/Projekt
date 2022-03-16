@@ -5,10 +5,12 @@ import java.awt.event.*;
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
+
+	public Road road1 = new Road(0,375,800,375);
+	public Car car1 = new Car(0.3,road1);
+
+
 	final ImageIcon icon = new ImageIcon("map.png");
-	// private Timer timer;
-	// private int dt = 20;
-	// private int time;
 	private DisplayPanel p1;
 	private JButton start;
 
@@ -23,14 +25,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 
 		// Panneau affichage
-		p1 = new DisplayPanel();
+		p1 = new DisplayPanel(this);
 		p1.setLayout(null);
 		p1.setBounds(0,0,800,800);
-
-		// JLabel map = new JLabel(new ImageIcon("map.png"));			// image du carrefour
-		// map.setBounds(0,0,800,800);
-		// p1.add(map);
-
 
     	add(p1);
 
@@ -45,9 +42,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		start.setBounds(50,700,200,50);
 		start.addActionListener(this);
 		p2.add(start);
-
-
-
 	}
 
 	public void actionPerformed(ActionEvent e){
