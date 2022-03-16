@@ -19,8 +19,8 @@ public class Car extends Vehicule{
 
 	// initialise la position de la voiture
 	public void setPosition(){
-		position[0] = road.getx1();							// place le véhicule en abcisse (modifier cette methode pour generaliser	- size[0]
-		position[1] = road.gety1() - size[1];				// a toutes les situations, ici que route horiz de gauche a droite	 - size[1]
+		position[0] = road.getStartingPoint()[0];							// place le véhicule en abcisse (modifier cette methode pour generaliser	- size[0]
+		position[1] = road.getStartingPoint()[1];				// a toutes les situations, ici que route horiz de gauche a droite	 - size[1]
 	}
 
 }
