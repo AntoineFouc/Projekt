@@ -31,14 +31,23 @@ public abstract class Vehicule {
 	// Permet de changer la position du vehicule et de l'afficher au bon endroit en fonction du temps
 	// A generaliser selon les routes verticales ou horizontales
 	public void move(Graphics g, int dt){
-		position[0] = position[0] + (int) (dt*speed);
+		if(road.isVertical()){
+			position[1] += dt * speed * road.direction;
+		}else{
+			position[0] += dt * speed * road.direction;
+		}
+
 		draw(g);
 	}
 
 	// dessine le vehicule
 	// A generaliser
 	public void draw(Graphics g){
-		g.fillRect(position[0], position[1], size[0], size[1]);
+		if(road.isVertical()){
+			g.fillRect(position[0] - size[0]/2, position[1] - size[1], size[1], size[0]);
+		}else{
+			g.fillRect(position[0] - size[0]/2, position[1] - size[1], size[0], size[1]);
+		}
 	}
 	
 }

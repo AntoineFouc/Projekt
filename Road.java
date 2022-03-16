@@ -2,29 +2,34 @@ public class Road{
 
 	private int[] startingPoint = new int[2];
 	private int[] endingPoint = new int[2];
+    public int direction;
 
     public Road(int x1, int y1, int x2, int y2){            // Point 1 de depart 2 d arrivee
     	startingPoint[0] = x1;
     	startingPoint[1] = y1;
     	endingPoint[0] = x2;
     	endingPoint[1] = y2;
+        direction = goPositive();
     }
 
     // getters permettant d'obtenir les points de la route
-    public int getx1(){
-    	return startingPoint[0];
+    public int[] getStartingPoint(){
+        return startingPoint;
     }
 
-    public int gety1(){
-    	return startingPoint[1];
+    public int[] getEndingPoint(){
+        return endingPoint;
     }
 
-    public int getx2(){
-    	return endingPoint[0];
+    // orientation de la route
+    public boolean isVertical(){
+        if(startingPoint[0] == endingPoint[0]) return true;
+        return false;
     }
 
-    public int gety2(){
-    	return endingPoint[1];
+    // retourne 1 si la route va dans le sens positif et 2 si negatif
+    public int goPositive(){
+        if(isVertical()) return (int) Math.round( (getEndingPoint()[1] - getStartingPoint()[1]) / Math.sqrt(getEndingPoint()[1] * getEndingPoint()[1] + getStartingPoint()[1] * getStartingPoint()[1]) );
+        else return (int) Math.round( (getEndingPoint()[0] - getStartingPoint()[0]) / Math.sqrt(getEndingPoint()[0] * getEndingPoint()[0] + getStartingPoint()[0] * getStartingPoint()[0]) );
     }
-
 }

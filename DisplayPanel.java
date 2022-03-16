@@ -20,11 +20,17 @@ public class DisplayPanel extends JPanel implements ActionListener{
         g2d.drawImage(new ImageIcon("map.png").getImage(), 0, 0, null);			// affichage du fond
 
         g.setColor(Color.red);
-        frame.car1.draw(g);										// dessine la voiture en sa position initiale
 
+		// dessine la voiture en sa position initiale
+        for(Vehicule c : frame.vehicules){
+        	c.draw(g);
+        }
 
+        // fait bouger la voiture
         if(time!=0){
-        	frame.car1.move(g, dt);								// fait bouger la voiture
+        	for(Vehicule c : frame.vehicules){
+        		c.move(g, dt);
+        	}
         }
 
 	}
