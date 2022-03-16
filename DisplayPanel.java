@@ -23,7 +23,6 @@ public class DisplayPanel extends JPanel implements ActionListener{
 
 
         if(time!=0){
-        	// g.drawRect(0,0,500,500);
         	frame.car1.move(g, dt);
         }
 

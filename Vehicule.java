@@ -11,8 +11,6 @@ public abstract class Vehicule {
 	public Vehicule(double s, Road r){
 		speed = s;			// vitesse initiale
 		road = r;
-
-		// a verifier le *2
 	}
 
 	public void setPosition(){}

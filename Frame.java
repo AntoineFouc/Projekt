@@ -44,11 +44,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(start);
 	}
 
-	/*public Car getCar(){
-		return car1;
-	}*/
-
-
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource() == start) p1.getTimer().start();
 	}
