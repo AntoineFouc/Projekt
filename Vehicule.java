@@ -4,6 +4,7 @@ import javax.swing.*;
 /*
 Remarques :
 methode move -> !isOnTheRoad() : il faudrait faire repartir le vehicule de plus loin (avant point de depart de la route)
+Mettre peut être 2 attribut vitesse et vitesse max, afin de pouvoir la diminuer lorsqu'on est proche d'une autre voiture, et la rétablir a vmax après
 */
 
 
