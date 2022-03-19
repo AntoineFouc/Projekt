@@ -2,11 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/*
+Regarder l'influence du pas de temps dt sur la vitesse de la simulation (theoriquement impact seulement la fluidite, pas la vitesses des vehicules)
+*/
+
 public class DisplayPanel extends JPanel implements ActionListener{
 
 	private Timer timer;
-	private int dt = 20;			// pas de tps
-	private int time;				// compteur de temps
+	private int dt = 10;			// pas de tps
+	protected int time;				// compteur de temps
 	private Frame frame;			// fenetre principale
 
 	public DisplayPanel(Frame f){
@@ -19,18 +23,10 @@ public class DisplayPanel extends JPanel implements ActionListener{
 		Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(new ImageIcon("map.png").getImage(), 0, 0, null);			// affichage du fond
 
-        g.setColor(Color.red);
-
-		// dessine la voiture en sa position initiale
+		// dessine la voiture et la fait bouger une fois que le chrono a commence
         for(Vehicule c : frame.vehicules){
+        	if(time!=0) c.move(dt);
         	c.draw(g);
-        }
-
-        // fait bouger la voiture
-        if(time!=0){
-        	for(Vehicule c : frame.vehicules){
-        		c.move(g, dt);
-        	}
         }
 
 	}
@@ -43,7 +39,5 @@ public class DisplayPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		time += dt;
 		repaint();
-
-
 	}
 }
