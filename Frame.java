@@ -5,7 +5,6 @@ import java.util.*;
 
 /*
 Remarques :
-Penser à faire plutot un tableau de checkboxes, voire hashmap <JCheckBox><boolean>
 Repenser la manière de créer les véhicules
 Reflechir a permettre a chaque vehicule d acceder aux positions des autres afin de prevoir ensuite l'adaptation de sa vitesse en fonction de l'environnement
 */
@@ -19,18 +18,18 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private Road road3 = new Road(375,0,375,800);
 	private Road road4 = new Road(450,800,450,0);
 
-
-	private Vehicule car1 = new Car(0.2,road1);
-	private Vehicule car2 = new Car(0.35,road2);
-	private Vehicule car3 = new Car(0.45,road3);
-	private Vehicule car4 = new Car(0.15,road4);
-	private Vehicule car5 = new Car(0.2, road1, 400);
+	private Vehicule car1 = new Car(0.2,road1,200);
+	private Vehicule car2 = new Car(0.35,road2,200);
+	private Vehicule car3 = new Car(0.45,road3,200);
+	private Vehicule car4 = new Car(0.15,road4,200);
+	private Vehicule car5 = new Car(0.2,road1,600);
 
 	public ArrayList<Vehicule> vehicules = new ArrayList<Vehicule>();		// liste des vehicules PRESENTS (cochés)
 
 	private DisplayPanel p1;
 	private JButton start;
 	private JButton pause;
+	private JButton restart;
 
 	// case pour cocher la presence des voiture 1 a 4
 	private JCheckBox cb1; private boolean cb1On=false;
@@ -63,17 +62,27 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 		// bouton start
 		start = new JButton(new ImageIcon("start.png"));
-		start.setBounds(10,740,135,50);
+		start.setBounds(10,680,135,50);
 		start.setBackground(new Color(0,170,0));
 		start.addActionListener(this);
 		p2.add(start);
 
 		// bouton pause
 		pause = new JButton(new ImageIcon("pause.png"));
-		pause.setBounds(155,740,135,50);
+		pause.setBounds(155,680,135,50);
 		pause.setBackground(new Color(250,20,20));
+		pause.addActionListener(this);
 		p2.add(pause);
 		pause.setEnabled(false); 				// desactive le bouton au debut
+
+		// bouton restart
+		restart = new JButton("Recommencer");
+		restart.setBounds(10,740,280,50);
+		restart.addActionListener(this);
+		p2.add(restart);
+		restart.setEnabled(false); 				// desactive le bouton au debut
+
+
 
 		// check boxes vehicules
 		cb1 = new JCheckBox("Voiture 1");
@@ -106,18 +115,11 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public void actionPerformed(ActionEvent e){
 
 		if(e.getSource() == start){
-			start.removeActionListener(this);
 			start.setEnabled(false);
-			pause.addActionListener(this);
 			pause.setEnabled(true);
+			restart.setEnabled(true);
 
 			// ne permet pas d enlever ou rajouter des voitures une fois l animation lancee
-			cb1.removeActionListener(this);
-			cb2.removeActionListener(this);
-			cb3.removeActionListener(this);
-			cb4.removeActionListener(this);
-			cb5.removeActionListener(this);
-
 			cb1.setEnabled(false);
 			cb2.setEnabled(false);
 			cb3.setEnabled(false);
@@ -129,11 +131,48 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 		if(e.getSource() == pause){				// met en pause la simulation
 			p1.getTimer().stop();
-			pause.removeActionListener(this);
 			pause.setEnabled(false);
-			start.addActionListener(this);
 			start.setEnabled(true);
 		}
+
+		if(e.getSource() == restart){
+			pause.setEnabled(false);
+			restart.setEnabled(false);
+
+			cb1.setEnabled(true);
+			cb2.setEnabled(true);
+			cb3.setEnabled(true);
+			cb4.setEnabled(true);
+			cb5.setEnabled(true);
+
+			cb1.setSelected(false);
+			cb2.setSelected(false);
+			cb3.setSelected(false);
+			cb4.setSelected(false);
+			cb5.setSelected(false);
+
+			cb1On=false;
+			cb2On=false;
+			cb3On=false;
+			cb4On=false;
+			cb5On=false;
+
+			vehicules.clear();
+			p1.repaint();
+
+			car1.setPosition(0);
+			car2.setPosition(0);
+			car3.setPosition(0);
+			car4.setPosition(0);
+			car5.setPosition(400);
+
+			p1.getTimer().stop();
+			p1.setTime(0);
+
+
+			start.setEnabled(true);
+		}
+
 
 
 		if(e.getSource() == cb1){

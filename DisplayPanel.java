@@ -10,7 +10,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
 
 	private Timer timer;
 	private int dt = 10;			// pas de tps
-	protected int time;				// compteur de temps
+	private int time;				// compteur de temps
 	private Frame frame;			// fenetre principale
 
 	public DisplayPanel(Frame f){
@@ -33,6 +33,10 @@ public class DisplayPanel extends JPanel implements ActionListener{
 
 	public Timer getTimer(){
 		return timer;
+	}
+
+	public void setTime(int t){
+		time = t;
 	}
 
 	// repaint et met a jour le tps tous les dt
