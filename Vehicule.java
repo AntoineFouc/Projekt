@@ -1,8 +1,10 @@
 import java.awt.*;
 import javax.swing.*;
+import java.util.*;
 
 /*
 Remarques :
+Mettre une seule valeur en position (car route connue)
 Vitesse reelle : 1 px/ms = 600 km/h
 */
 
@@ -14,9 +16,10 @@ public abstract class Vehicule {
 	protected double speed;						// en pixel par ms
 	protected int[] size = new int[2];			// taille longueur puis largeur
 	protected Road road;						// on assigne a une route a un vehicule
+	public ArrayList<Vehicule> vehicules;
 
-	
-	
+
+
 	public Vehicule(double s, Road r, int distance){
 		speed = s;			// vitesse initiale
 		road = r;
@@ -85,5 +88,8 @@ public abstract class Vehicule {
 			}
 		}
 	}
-	
+
+	public void setVehicules(ArrayList<Vehicule> v){
+		vehicules = v;
+	}
 }
