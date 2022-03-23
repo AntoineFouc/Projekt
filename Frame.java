@@ -26,6 +26,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	public ArrayList<Vehicule> vehicules = new ArrayList<Vehicule>();		// liste des vehicules PRESENTS (cochés)
 
+
+
 	private DisplayPanel p1;
 	private JButton start;
 	private JButton pause;
@@ -125,6 +127,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			cb3.setEnabled(false);
 			cb4.setEnabled(false);
 			cb5.setEnabled(false);
+
+			for(Vehicule v : vehicules){
+				v.setVehicules(vehicules);
+			}
 
 			p1.getTimer().start(); // commence le chrono dans p1 (DisplayPanel) lorsqu'on appuie sur le bouton
 		}
