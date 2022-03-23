@@ -19,7 +19,17 @@ public class Car extends Vehicule{
 	}
 
 	public void draw(Graphics g){
-		super.draw(g);
+		Graphics2D g2d = (Graphics2D) g;
+		if(road.isVertical()){
+			if(road.goPositive() == 1) g2d.drawImage(new ImageIcon("car4.png").getImage(), position[0] - size[0]/2, position[1] - size[1], size[1], size[0], null);
+			else g2d.drawImage(new ImageIcon("car2.png").getImage(), position[0] - size[0]/2, position[1] - size[1], size[1], size[0], null);
+
+
+		}else{
+			if(road.goPositive() == 1) g2d.drawImage(new ImageIcon("car.png").getImage(), position[0] - size[0]/2, position[1] - size[1], size[0], size[1], null);
+			else g2d.drawImage(new ImageIcon("car3.png").getImage(), position[0] - size[0]/2, position[1] - size[1], size[0], size[1], null);
+
+		}
 	}
 
 	// initialise la position de la voiture
