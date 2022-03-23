@@ -13,11 +13,11 @@ Reflechir a permettre a chaque vehicule d acceder aux positions des autres afin 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
 	// Initialisation vehicules et routes (a mettre ailleurs plus tard)
-	private Road road1 = new Road(800,375,0,375);
-	private Road road2 = new Road(0,450,800,450);
-	private Road road3 = new Road(375,0,375,800);
-	private Road road4 = new Road(450,800,450,0);
-
+	private Road road1 = new Road(800,370,0,370);
+	private Road road2 = new Road(0,430,800,430);
+	private Road road3 = new Road(370,0,370,800);
+	private Road road4 = new Road(430,800,430,0);
+	
 	private Vehicule car1 = new Car(0.2,road1,200);
 	private Vehicule car2 = new Car(0.35,road2,200);
 	private Vehicule car3 = new Car(0.45,road3,200);
