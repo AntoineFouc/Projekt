@@ -63,14 +63,14 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		add(p2);
 
 		// bouton start
-		start = new JButton(new ImageIcon("start.png"));
+		start = new JButton(new ImageIcon("Images/start.png"));
 		start.setBounds(10,680,135,50);
 		start.setBackground(new Color(0,170,0));
 		start.addActionListener(this);
 		p2.add(start);
 
 		// bouton pause
-		pause = new JButton(new ImageIcon("pause.png"));
+		pause = new JButton(new ImageIcon("Images/pause.png"));
 		pause.setBounds(155,680,135,50);
 		pause.setBackground(new Color(250,20,20));
 		pause.addActionListener(this);
