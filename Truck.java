@@ -18,13 +18,13 @@ public class Truck extends Vehicule{
 	public void draw(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
         if(road.isVertical()){
-			if(road.goPositive() == 1) g2d.drawImage(new ImageIcon("truckbas.png").getImage(), position[0] - size[1]/2, position[1] - size[0]/2, size[1], size[0], null);
-			else g2d.drawImage(new ImageIcon("truckhaut.png").getImage(), position[0] - size[1]/2, position[1] - size[0]/2, size[1], size[0], null);
+			if(road.goPositive() == 1) g2d.drawImage(new ImageIcon("Images/truckbas.png").getImage(), position[0] - size[1]/2, position[1] - size[0]/2, size[1], size[0], null);
+			else g2d.drawImage(new ImageIcon("Images/truckhaut.png").getImage(), position[0] - size[1]/2, position[1] - size[0]/2, size[1], size[0], null);
 
 
 		}else{
-			if(road.goPositive() == 1) g2d.drawImage(new ImageIcon("truckdroite.png").getImage(), position[0] - size[0]/2, position[1] - size[1]/2, size[0], size[1], null);
-			else g2d.drawImage(new ImageIcon("truckgauche.png").getImage(), position[0] - size[0]/2, position[1] - size[1]/2, size[0], size[1], null);
+			if(road.goPositive() == 1) g2d.drawImage(new ImageIcon("Images/truckdroite.png").getImage(), position[0] - size[0]/2, position[1] - size[1]/2, size[0], size[1], null);
+			else g2d.drawImage(new ImageIcon("Images/truckgauche.png").getImage(), position[0] - size[0]/2, position[1] - size[1]/2, size[0], size[1], null);
 
 		}
 	}
