@@ -21,7 +21,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
 
 	public void paint(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(new ImageIcon("map.png").getImage(), 0, 0, null);			// affichage du fond
+        g2d.drawImage(new ImageIcon("Images/map.png").getImage(), 0, 0, null);			// affichage du fond
 
 		// dessine la voiture et la fait bouger une fois que le chrono a commence
         for(Vehicule c : frame.vehicules){
