@@ -26,7 +26,7 @@ public abstract class Vehicule {
 		speed = s;			// vitesse initiale
 		maxSpeed = s;
 		road = r;
-		accel = 0.0004;
+		accel = 0.002;
 		initialPosition=distance;
 		position = distance;
 	}
@@ -34,19 +34,44 @@ public abstract class Vehicule {
 	// Permet de changer la position du vehicule en fonction du temps
 	public void move(int dt){
 		if(!isOnTheRoad()){
-			position = 0.0;
+			position = - size[0]/2;
 		}else{
 			position += dt*speed;
 		}
 	}
 
-	public void adaptSpeed(int dt){
+
+
+
+
+
+
+
+
+
+
+
+	/*
+	Methode interaction a completer : créer des méthode pour freiner, accélérer en dessous pour s'en servir dans interaction
+	*/
+	public void interaction(int dt){
 		for(Vehicule v : vehicules){
 			if(!equals(v)){
 
+
+				/*
+					Chaque cas d'interaction :
+						Trop près du véhicule devant
+						Priorité à droite
+						puis obstacle
+				*/
+
+
+
+
 				//adaptation de la vitesse du véhicule en fonction des autres véhicules
 
-				// pas parfait, juste test
+				// pas parfait, juste test, a changer
 				if(road.equals(v.getRoad()) && position < v.getPosition() && v.getPosition()-v.getSize()[0]/2.0-position-size[0]/2.0 < 50){
 					speed += - dt*accel;
 				}else if(speed<maxSpeed){
@@ -67,6 +92,40 @@ public abstract class Vehicule {
 			}
 		}
 	}
+
+	//Ralentir jusqu'à une certaine vitesse
+	/*public void deccel(speed s){
+		if(speed+dt*accel < s){
+
+		}
+
+
+	}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// dessine le vehicule
 	public void draw(Graphics g){
@@ -94,7 +153,7 @@ public abstract class Vehicule {
 
 	// renvoie false si le vamex a depasse le point d arrivee de la route (sers a faire repartir le véhicule au point de depart)
 	public boolean isOnTheRoad(){
-		return position < 800;			// ou plutôt "longueur de la route" pour pouvoir adapter
+		return position < 800 + size[0]/2;			// ou plutôt "longueur de la route" pour pouvoir adapter
 	}
 
 	public boolean equals(Vehicule v){

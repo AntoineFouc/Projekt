@@ -14,9 +14,6 @@ Faire une méthode dans vehicule qui permet de les reset
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
 	private Road[] listOfRoads = {new Road(800,370,0,370), new Road(0,430,800,430), new Road(370,0,370,800), new Road(430,800,430,0)};
-	
-	private Vehicule car1 = new Car(0.1,listOfRoads[1],200);
-	private Vehicule car2 = new Truck(0.2,listOfRoads[1],0);
 
 
 	public ArrayList<Vehicule> allVehicules = new ArrayList<Vehicule>();
@@ -92,11 +89,12 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		/*for(Road r : listOfRoads){
 			for(int j=0; j<800; j+=50){
 				allVehicules.add(new Car(0.3, r, j));
+				vehicules.add(new Car(0.3, r, j));
 			}
 		}*/
 
-		vehicules.add(car1);
-		vehicules.add(car2);
+		vehicules.add(new Truck(0.3, listOfRoads[3], 200));
+		vehicules.add(new Car(0.35, listOfRoads[3], 0));
 
 
 	}

@@ -26,7 +26,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
 		// dessine la voiture et la fait bouger une fois que le chrono a commence
         for(Vehicule v : frame.vehicules){
         	if(time!=0){
-        		v.adaptSpeed(dt);
+        		v.interaction(dt);
         		v.move(dt);
         	}
         	v.draw(g);
