@@ -1,14 +1,12 @@
 /*
 Remarques :
-Si l'on souhaite faire tourner les voitures, faire une autre classe avec 1 point intermédiaire à l'angle (ou autre manière)
-Eventuellement prévoir l'orientation de la route d'une manière différente de isVertical + goPositive
 */
 
 public class Road{
 
 	private int[] startingPoint = new int[2];
 	private int[] endingPoint = new int[2];
-    private int orientation;    // en degré : 0=horizontal de gauche à droite (compris entre )
+    private int orientation;    // en degré : 0=horizontal de gauche à droite (compris entre 0 et 360)
 
     public Road(int x1, int y1, int x2, int y2){            // Point 1 de depart 2 d arrivee
     	startingPoint[0] = x1;
@@ -37,20 +35,6 @@ public class Road{
     public int[] getEndingPoint(){
         return endingPoint;
     }
-
-
-    // orientation de la route
-    /*public boolean isVertical(){
-        if(startingPoint[0] == endingPoint[0]) return true;
-        return false;
-    }
-
-    // retourne 1 si la route va dans le sens positif (des x ou y) et 2 si negatif
-    public int goPositive(){
-        if(isVertical()) return (int) Math.round( (getEndingPoint()[1] - getStartingPoint()[1]) / Math.sqrt(getEndingPoint()[1] * getEndingPoint()[1] + getStartingPoint()[1] * getStartingPoint()[1]) );
-        else return (int) Math.round( (getEndingPoint()[0] - getStartingPoint()[0]) / Math.sqrt(getEndingPoint()[0] * getEndingPoint()[0] + getStartingPoint()[0] * getStartingPoint()[0]) );
-    }*/
-
 
     public int getOrientation(){
         return orientation;

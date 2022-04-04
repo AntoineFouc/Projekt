@@ -45,7 +45,9 @@ public class DisplayPanel extends JPanel implements ActionListener{
 	// repaint et met a jour le tps tous les dt
 	public void actionPerformed(ActionEvent e){
 		time += dt;
-		if(frame.isAnAccident()) System.out.println("ACCIDEEEEEEEEEEEEEENT");
+		if(frame.isAnAccident()){
+			// A completer
+		}
 		repaint();
 	}
 }
