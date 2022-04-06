@@ -3,13 +3,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 /*
-Regarder l'influence du pas de temps dt sur la vitesse de la simulation (impacte seulement la fluidite, pas la vitesses des vehicules)
+Regarder l'influence du pas de temps dt sur la vitesse de la simulation (theoriquement impact seulement la fluidite, pas la vitesses des vehicules)
 */
 
 public class DisplayPanel extends JPanel implements ActionListener{
 
 	private Timer timer;
-	private int dt = 5;				// pas de tps
+	private int dt = 10;			// pas de tps
 	private int time;				// compteur de temps
 	private Frame frame;			// fenetre principale
 
@@ -24,12 +24,14 @@ public class DisplayPanel extends JPanel implements ActionListener{
         g2d.drawImage(new ImageIcon("Images/map.png").getImage(), 0, 0, null);			// affichage du fond
 
 		// dessine la voiture et la fait bouger une fois que le chrono a commence
-        for(Vehicule v : frame.vehicules){
-        	if(time!=0){
-        		v.interaction(dt);
-        		v.move(dt);
-        	}
-        	v.draw(g);
+        for(Vehicule c : frame.vehicules){
+        	if(time!=0) c.move(dt);
+        	c.draw(g);
+        }
+        for(obstacle o : frame.obstacles){
+            if(!o.equals(null)){
+                o.draw(g);
+            }
         }
 
 	}
@@ -44,10 +46,15 @@ public class DisplayPanel extends JPanel implements ActionListener{
 
 	// repaint et met a jour le tps tous les dt
 	public void actionPerformed(ActionEvent e){
-		time += dt;
-		if(frame.isAnAccident()){
-			// A completer
-		}
-		repaint();
+        if(e.getSource()==timer){
+            time += dt;
+            for(obstacle o : frame.obstacles){
+                if(o instanceof feurouge){
+                    ((feurouge)o).setTimer(((feurouge)o).getTimer()+1);
+                    ((feurouge)o).update(time);
+                }
+            }
+            repaint();
+        }
 	}
 }

@@ -13,20 +13,35 @@ Faire une méthode dans vehicule qui permet de les reset
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
-	private Road[] listOfRoads = {new Road(800,370,0,370), new Road(0,430,800,430), new Road(370,0,370,800), new Road(430,800,430,0)};
+	private Road[] routes = {new Road(800,370,0,370), new Road(0,430,800,430), new Road(370,0,370,800), new Road(430,800,430,0)};
 
 
 	public ArrayList<Vehicule> allVehicules = new ArrayList<Vehicule>();
 	public ArrayList<Vehicule> vehicules = new ArrayList<Vehicule>();		// liste des vehicules PRESENTS
+    public ArrayList<obstacle> obstacles = new ArrayList<obstacle>();       // liste des obstacles PRESENTS
 
-
-
+    boolean appuyé=false;       //état de l'action clic souris
+    boolean select=false;       //variable qqchose selectionné
+    String quoi;                //type d'obstacle à placer
+    
 	private DisplayPanel p1;
 	private JButton start;
 	private JButton pause;
 	private JButton restart;
-	private JButton init;
+    private JButton trash;
 	private JSlider traffic;
+    // bouton feu rouge
+    private JButton boutonFeu;
+    private JTextField valeurFeu;
+    private int valfeu;
+    
+    //bouton limitation
+    private JButton boutonLimite;
+    private JTextField valeurLimite;
+    private int vallim;
+    
+    //bouton barriere
+    private JButton boutonBarriere;
 
 	public Frame(){
 		setTitle("K-Roof");
@@ -41,6 +56,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p1 = new DisplayPanel(this);
 		p1.setLayout(null);
 		p1.setBounds(0,0,800,800);
+        p1.addMouseListener(this);
 		add(p1);
 
 		// Panneau interface
@@ -72,11 +88,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(restart);
 		restart.setEnabled(false); 				// desactive le bouton au debut
 
-		init = new JButton("Initialiser");
-		init.setBounds(10,620,280,50);
-		init.addActionListener(this);
-		p2.add(init);
-
 		traffic = new JSlider(0,64,20);
 		traffic.setBounds(10,10,280,100);
 		traffic.setMinorTickSpacing(4);
@@ -84,17 +95,58 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		traffic.setPaintTicks(true);
 		traffic.setPaintLabels(true);
 		p2.add(traffic);
+        
+        //bouton trash
+        trash = new JButton(new ImageIcon("Images/corbeille.png"));
+		trash.setBounds(155,620,135,50);
+		trash.setBackground(new Color(191,191,191));
+		trash.addActionListener(this);
+		p2.add(trash);
+		trash.setEnabled(true); 
+        
+        //bouton feu rouge
+		boutonFeu = new JButton(new ImageIcon("Images/feurouge.png"));
+		boutonFeu.setBounds(20,195,60,135);
+		boutonFeu.addMouseListener(this);
+        boutonFeu.setVisible(true);
+		p2.add(boutonFeu);
+        
+        //valeur feu rouge
+        valeurFeu = new JTextField("Intervalle");
+        valeurFeu.setBounds(20,340,60,30);
+        valeurFeu.setVisible(true);
+        p2.add(valeurFeu);
+        
+        // bouton limites
+		boutonLimite = new JButton(new ImageIcon("Images/limitation.png"));
+		boutonLimite.setBounds(100,195,70,70);
+		boutonLimite.addMouseListener(this);
+        boutonLimite.setVisible(true);
+		p2.add(boutonLimite);
+        
+        //valeur limites
+        valeurLimite = new JTextField("Limite");
+        valeurLimite.setBounds(100,340,70,30);
+        valeurLimite.setVisible(true);
+        p2.add(valeurLimite);
+        
+        //bouton barrière
+        boutonBarriere = new JButton(new ImageIcon("Images/barriere.png"));
+        boutonBarriere.setBounds(190,195,62,40);
+		boutonBarriere.addMouseListener(this);
+        boutonBarriere.setVisible(true);
+        p2.add(boutonBarriere);
 
 
-		/*for(Road r : listOfRoads){
+		/*for(Road r : routes){
 			for(int j=0; j<800; j+=50){
 				allVehicules.add(new Car(0.3, r, j));
 				vehicules.add(new Car(0.3, r, j));
 			}
 		}*/
 
-		vehicules.add(new Truck(0.3, listOfRoads[3], 200));
-		vehicules.add(new Car(0.35, listOfRoads[3], 0));
+		vehicules.add(new Truck(0.3, routes[3], 200));
+		vehicules.add(new Car(0.35, routes[3], 0));
 
 
 	}
@@ -131,7 +183,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			start.setEnabled(false);
 			pause.setEnabled(true);
 			restart.setEnabled(true);
-			init.setEnabled(false);
+			//init.setEnabled(false);
 
 			for(Vehicule v : vehicules){
 				v.setVehicules(vehicules);
@@ -144,13 +196,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			p1.getTimer().stop();
 			pause.setEnabled(false);
 			start.setEnabled(true);
-			init.setEnabled(true);
+			//init.setEnabled(true);
 		}
 
 		if(e.getSource() == restart){
 			pause.setEnabled(false);
 			restart.setEnabled(false);
-			init.setEnabled(true);
+			//init.setEnabled(true);
 
 			for(Vehicule v : vehicules){
 				v.resetPosition();
@@ -161,31 +213,91 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 			p1.getTimer().stop();
 			p1.setTime(0);
-
+            
+            valeurFeu.setText("Intervalle");
+            valeurLimite.setText("Limite");
 
 			start.setEnabled(true);
 		}
 
-		if(e.getSource() == init){
-			int NumberOfVehicles = (int) traffic.getValue();
-			for(Road r : listOfRoads){
-
+		//if(e.getSource() == init){
+		//	int NumberOfVehicles = (int) traffic.getValue();
+		//}
+        
+        if(e.getSource() == trash){
+            ArrayList<obstacle> supprimer = new ArrayList<>();
+            for(obstacle o : obstacles){
+				supprimer.add(o);
 			}
-
-
-			p1.repaint();
-		}
+            obstacles.removeAll(supprimer);
+            p1.repaint();
+        }
 	}
 
 	public void mouseEntered(MouseEvent e){}
 
 	public void mouseExited(MouseEvent e){}
 
-	public void mousePressed(MouseEvent e){}
+	public void mousePressed(MouseEvent e){
+        if(obstacles.contains(e.getSource())){ 
+            if(SwingUtilities.isRightMouseButton(e)){
+                //Supprimer l'obstacle
+                obstacles.remove(e.getSource());
+                p1.repaint();
+            }
+        } else if (SwingUtilities.isLeftMouseButton(e)){
+            if(e.getSource()==boutonFeu){
+                appuyé=true;
+                quoi="feurouge"; //coiffeur haha
+            } else if(e.getSource()==boutonLimite){
+                appuyé=true;
+                quoi="limitation";
+            } else if(e.getSource()==boutonBarriere){
+                appuyé=true;
+                quoi="barriere";
+            }
+        }
+        }
 
-	public void mouseReleased(MouseEvent e){}
+	public void mouseReleased(MouseEvent e){
+        if(appuyé){
+            ajouterElement(quoi);
+        }
+    }
 
-	public void mouseClicked(MouseEvent e){}
+	public void mouseClicked(MouseEvent e){
+        if(e.getSource()==boutonFeu&&SwingUtilities.isLeftMouseButton(e)&&!select){ //feu rouge
+            select=true;
+            quoi="feurouge";
+        } else if (e.getSource()==boutonLimite&&SwingUtilities.isLeftMouseButton(e)&&!select){ //limitation
+            select=true;
+            quoi="limitation";
+        } else if (e.getSource()==boutonBarriere&&SwingUtilities.isLeftMouseButton(e)&&!select){ //barriere
+            select=true;
+            quoi="barriere";
+        } else if (select&&quoi.equals("feurouge")){
+            if(e.getSource()==p1&&SwingUtilities.isLeftMouseButton(e)){
+                ajouterElement("feurouge");
+                select=false;
+            } else {
+                select=false;
+            }
+        } else if (select&&quoi.equals("limitation")){
+            if(e.getSource()==p1&&SwingUtilities.isLeftMouseButton(e)){
+                ajouterElement("limitation");
+                select=false;
+            } else {
+                select=false;
+            }
+        } else if (select&&quoi.equals("barriere")){
+            if(e.getSource()==p1&&SwingUtilities.isLeftMouseButton(e)){
+                ajouterElement("barriere");
+                select=false;
+            } else {
+                select=false;
+            }
+        }
+    }
 
 	public void keyPressed(KeyEvent e){}
 
@@ -193,6 +305,77 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	public void keyTyped(KeyEvent e){}
 
+        public void ajouterElement(String valeur){
+            PointerInfo a = MouseInfo.getPointerInfo();
+            Point b = a.getLocation();
+            int x = (int) b.getX()-this.getLocationOnScreen().x;
+            int y = (int) b.getY()-this.getLocationOnScreen().y-38;
+            if((x<=p1.getWidth())&&(y<=p1.getHeight())&&(x>=0)&&(y>=0)){ //Check si relaché dans la map
+                int pos = getRoute(x,y,routes);
+                if(pos!=-1){ //check si le point choisi est dans une route et pas un carrefour
+                    //ajouter obstacle
+                    if(valeur.equals("feurouge")){   //cas feu rouge
+                        if(isInt(valeurFeu.getText())){
+                            valfeu=Integer.valueOf(valeurFeu.getText());
+                        } else {
+                            valfeu=0;
+                        }
+                        feurouge feu=new feurouge(x,y,routes[pos],valfeu);
+                        obstacles.add(feu);
+                        p1.repaint();
+                    } else if (valeur.equals("limitation")){   //cas limitation
+                        if(isInt(valeurLimite.getText())){
+                            vallim=Integer.valueOf(valeurLimite.getText());
+                        } else {
+                            vallim=0;
+                        }
+                        limitation limite=new limitation(x,y,routes[pos],vallim);
+                        obstacles.add(limite);
+                        p1.repaint();
+                    } else if (valeur.equals("barriere")){   //cas barriere
+                        barriere bar=new barriere(x,y,routes[pos]);
+                        obstacles.add(bar);
+                        p1.repaint();
+                    }
+                }
+            }
+        }
+        
+    public boolean checkPos(int x,int y, ArrayList<Road> routes){
+        boolean verif=true;
+        return verif;
+    }
+    
+    public int getRoute(int x, int y, Road[] routes){
+        int rep=-1;
+        int liste=0;
+        for(int i=0;i<routes.length;i++){
+            int x1=routes[i].getStartingPoint()[0];
+            int x2=routes[i].getEndingPoint()[0];
+            int y1=routes[i].getStartingPoint()[1];
+            int y2=routes[i].getEndingPoint()[1];
+            if((x>=Math.min(x1,x2)-29)&&(x<=Math.max(x1,x2)+29)&&y>=(Math.min(y1,y2)-29)&&(y<=Math.max(y1,y2)+29)){
+                rep=i;
+                liste++;
+            }
+        }
+        if(liste>1){
+            rep=-1;
+        }
+        return rep;
+    }
+    
+        public static boolean isInt(String strNum) {
+    if (strNum == null) {
+        return false;
+    }
+    try {
+        int d = Integer.parseInt(strNum);
+    } catch (NumberFormatException nfe) {
+        return false;
+    }
+    return true;
+}
 }
 
 

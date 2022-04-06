@@ -1,15 +1,24 @@
-public class obstacle{
+import java.awt.*;
+import javax.swing.*;
+import java.util.*;
 
-    protected int longueur;
-    protected int largeur;
-    protected int posx;
-    protected int posy;
+public abstract class obstacle{
+
+    protected int x;
+    protected int y;
+    protected Road road;
+    public ArrayList<obstacle> obstacles;
     
-    public obstacle(int unelongueur,int unelargeur,int uneposx,int uneposy){
-        longueur=unelongueur;
-        largeur=unelargeur;
-        posx=uneposx;
-        posy=uneposy;
+    public obstacle(int uneposx,int uneposy, Road route){
+        x=uneposx;
+        y=uneposy;
+        road=route;
     }
+    
+    public void draw(Graphics g){
+	}
 
+	public void setObstacles(ArrayList<obstacle> o){
+		obstacles = o;
+	}
 }
