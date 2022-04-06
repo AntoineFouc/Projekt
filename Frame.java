@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.awt.Graphics;
 
 /*
 Remarques :
@@ -13,7 +14,7 @@ Faire une méthode dans vehicule qui permet de les reset
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
-	private Road[] routes = {new Road(800,370,0,370), new Road(0,430,800,430), new Road(370,0,370,800), new Road(430,800,430,0)};
+	public Road[] routes = {new Road(800,370,0,370), new Road(0,430,800,430), new Road(370,0,370,800), new Road(430,800,430,0)};
 
 
 	public ArrayList<Vehicule> allVehicules = new ArrayList<Vehicule>();
@@ -30,6 +31,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private JButton restart;
     private JButton trash;
 	private JSlider traffic;
+	private JSlider rapidite;
+	private JSlider aggressivite;
+
     // bouton feu rouge
     private JButton boutonFeu;
     private JTextField valeurFeu;
@@ -62,7 +66,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		// Panneau interface
 		JPanel p2 = new JPanel();
 		p2.setLayout(null);
-		p2.setBackground(new Color(230,230,230));
 		p2.setBounds(800,0,300,800);
 		add(p2);
 
@@ -88,13 +91,32 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(restart);
 		restart.setEnabled(false); 				// desactive le bouton au debut
 
-		traffic = new JSlider(0,64,20);
-		traffic.setBounds(10,10,280,100);
-		traffic.setMinorTickSpacing(4);
-		traffic.setMajorTickSpacing(16);
+		// curseur trafic
+		traffic = new JSlider(0,100,20);
+		traffic.setBounds(10,10,280,50);
+		traffic.setMinorTickSpacing(5);
+		traffic.setMajorTickSpacing(20);
 		traffic.setPaintTicks(true);
 		traffic.setPaintLabels(true);
 		p2.add(traffic);
+
+		// curseur conduite rapide
+		rapidite = new JSlider(0,100,20);
+		rapidite.setBounds(10,70,280,50);
+		rapidite.setMinorTickSpacing(5);
+		rapidite.setMajorTickSpacing(20);
+		rapidite.setPaintTicks(true);
+		rapidite.setPaintLabels(true);
+		p2.add(rapidite);
+
+		// curseur aggressivite
+		aggressivite = new JSlider(0,100,20);
+		aggressivite.setBounds(10,130,280,50);
+		aggressivite.setMinorTickSpacing(5);
+		aggressivite.setMajorTickSpacing(20);
+		aggressivite.setPaintTicks(true);
+		aggressivite.setPaintLabels(true);
+		p2.add(aggressivite);
         
         //bouton trash
         trash = new JButton(new ImageIcon("Images/corbeille.png"));
@@ -136,45 +158,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		boutonBarriere.addMouseListener(this);
         boutonBarriere.setVisible(true);
         p2.add(boutonBarriere);
-
-
-		/*for(Road r : routes){
-			for(int j=0; j<800; j+=50){
-				allVehicules.add(new Car(0.3, r, j));
-				vehicules.add(new Car(0.3, r, j));
-			}
-		}*/
-
-		vehicules.add(new Truck(0.3, routes[3], 200));
-		vehicules.add(new Car(0.35, routes[3], 0));
-
-
 	}
-
-
-
-	// A completer (que sur la même route pour le moment)
-	public boolean isAnAccident(){
-		boolean accident=false;
-
-		for(Vehicule v1 : vehicules){
-			for(Vehicule v2 : vehicules){
-				if(!v1.equals(v2)){
-					if(v2.getPosition()-v2.getSize()[0]/2.0-v1.getPosition()-v1.getSize()[0]/2.0 == 0 && v1.getRoad().equals(v2.getRoad())) accident = true;
-				}
-
-			}
-		}
-
-
-		return accident;
-
-	}
-
-
-
-
-
 
 
 	public void actionPerformed(ActionEvent e){
@@ -185,10 +169,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			restart.setEnabled(true);
 			//init.setEnabled(false);
 
-			for(Vehicule v : vehicules){
-				v.setVehicules(vehicules);
-			}
-
 			p1.getTimer().start(); // commence le chrono dans p1 (DisplayPanel) lorsqu'on appuie sur le bouton
 		}
 
@@ -196,18 +176,14 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			p1.getTimer().stop();
 			pause.setEnabled(false);
 			start.setEnabled(true);
-			//init.setEnabled(true);
 		}
 
 		if(e.getSource() == restart){
 			pause.setEnabled(false);
 			restart.setEnabled(false);
-			//init.setEnabled(true);
+			start.setEnabled(true);
 
-			for(Vehicule v : vehicules){
-				v.resetPosition();
-			}
-			// vehicules.clear();			// A changer
+			vehicules.clear();
 
 			p1.repaint();
 
@@ -216,13 +192,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
             
             valeurFeu.setText("Intervalle");
             valeurLimite.setText("Limite");
-
-			start.setEnabled(true);
 		}
-
-		//if(e.getSource() == init){
-		//	int NumberOfVehicles = (int) traffic.getValue();
-		//}
         
         if(e.getSource() == trash){
             ArrayList<obstacle> supprimer = new ArrayList<>();
@@ -365,17 +335,82 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
         return rep;
     }
     
-        public static boolean isInt(String strNum) {
-    if (strNum == null) {
-        return false;
-    }
-    try {
-        int d = Integer.parseInt(strNum);
-    } catch (NumberFormatException nfe) {
-        return false;
-    }
-    return true;
-}
+    public static boolean isInt(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        int d = Integer.parseInt(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
+	}
+
+	public int getTraffic(){
+		return traffic.getValue();
+	}
+
+	public int getRapidite(){
+		return rapidite.getValue();
+	}
+
+	public int getAggressivite(){
+		return aggressivite.getValue();
+	}
+
+	public int howManyVehicles(Road r){
+		int i=0;
+		for(Vehicule v : vehicules){
+			if(v.getRoad().equals(r)) i++;
+		}
+		return i;
+	}
+
+	public boolean newVehicle(Road r){
+		for(Vehicule v : vehicules){
+			if(v.getRoad().equals(r) && v.getSafePosition()<getTraffic()) return false;
+		}
+		return true;
+	}
+
+	public boolean isAnAccident(){
+		for(Vehicule v1 : vehicules){
+			for(Vehicule v2 : vehicules){
+				if(v1.getRectangle().intersects(v2.getRectangle()) && !v1.equals(v2)) return true;
+			}
+		}
+		return false;
+	}
+
+
+	public void interaction(){
+
+		for(Vehicule v1 : vehicules){
+
+			int prio=0;
+			/*
+			Ordre des priorités dans les interactions :
+			0 : Pas de danger
+			1 : danger lointain (distance de sécurité avec le véhicule devant
+			2 : Intersection / arrêt nécessaire
+			*/
+
+			for(Vehicule v2 : vehicules){
+				if(!v1.equals(v2)){
+					if(v1.getRoad().equals(v2.getRoad()) && v1.getPosition()<v2.getPosition() && v2.getSafePosition()<v1.getFront() && prio <1){
+						prio = 1;
+						v1.deccelTo(v2.getSpeed());
+					}else if(prio==0){
+						v1.accel();
+					}
+				}
+
+				/*Compléter les intéractions ici*/
+
+			}
+		}
+	}
 }
 
 
