@@ -43,7 +43,10 @@ public abstract class Vehicule {
 
 
 
-
+	public void stopAtX (double X){
+		double d   =  X - this.position;
+		this.accel = -Math.pow(speed,2)/d;
+	}
 
 
 
