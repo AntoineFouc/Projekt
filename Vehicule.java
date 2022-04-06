@@ -36,6 +36,7 @@ public abstract class Vehicule {
 		if(!isOnTheRoad()){
 			position = - size[0]/2;
 		}else{
+			speed += dt*accel;
 			position += dt*speed;
 		}
 	}
