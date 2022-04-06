@@ -3,7 +3,7 @@ Liste des trucs à faire :
 A changer :
 - definition de la vitesse et acceleration (classe véhicule, ligne 26)
 
-Interaction (classe véhicule, ligne 54) : 
+Interaction (classe FRAME) : 
 - coder les croisements entre deux véhicules avec priorité à droite (Simon)
 - anticiper le freinage en fonction de la vitesse du véhicule et de la distance de sécurité du véhicule devant
 
