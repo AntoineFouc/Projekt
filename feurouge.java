@@ -28,8 +28,6 @@ public class feurouge extends obstacle{
         
         if(road.getOrientation() == 270) g2d.drawImage(new ImageIcon(image).getImage(), 351-40, y-135, 40, 135, null);
 			else if (road.getOrientation()==90){ g2d.drawImage(new ImageIcon(image).getImage(), 459-10, y-135, 40, 135, null);
-
-
 		}else if(road.getOrientation() == 0) g2d.drawImage(new ImageIcon(image).getImage(), x-20, 459-20, 40, 135, null);
 			else if (road.getOrientation() ==180){
                 g2d.drawImage(new ImageIcon(image).getImage(), x-10, 351-135, 40, 135, null);

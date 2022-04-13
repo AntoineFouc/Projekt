@@ -11,11 +11,16 @@ public class DisplayPanel extends JPanel implements ActionListener{
 	private Timer timer;
 	private int dt = 10;			// pas de tps
 	private int time;				// compteur de temps
+    private long realtime;
+    private long tactuel;
+    private long t0;
+    private long tpause;
 	private Frame frame;			// fenetre principale
 
 	public DisplayPanel(Frame f){
 		timer = new Timer(dt,this);
 		time = 0;
+        t0 = 0;
 		frame = f;
 	}
 
@@ -25,9 +30,9 @@ public class DisplayPanel extends JPanel implements ActionListener{
 
 		// dessine la voiture et la fait bouger une fois que le chrono a commence
         for(Vehicule c : frame.vehicules){
+        	if(time!=0) c.move(dt);
         	c.draw(g);
         }
-
         for(obstacle o : frame.obstacles){
             if(!o.equals(null)){
                 o.draw(g);
@@ -40,54 +45,50 @@ public class DisplayPanel extends JPanel implements ActionListener{
 		return timer;
 	}
 
-	public int getDt(){
-		return dt;
-	}
-
 	public void setTime(int t){
 		time = t;
 	}
+    
+	public int getDt(){
+		return dt;
+	}
+   
+    public long getTime(){
+        return time;
+    }
+    
 
 	// repaint et met a jour le tps tous les dt
 	public void actionPerformed(ActionEvent e){
         if(e.getSource()==timer){
             time += dt;
-
+            
             for(Road r : frame.routes){
-	        		if(frame.howManyVehicles(r) == 0 || frame.newVehicle(r)){
-	        			// frame.vehicules.add(new Car(r,0.3,0.002));
-	        			addVehicle(r);
-	        		}
+                if(frame.howManyVehicles(r) == 0 || frame.newVehicle(r)){
+                    // frame.vehicules.add(new Car(r,0.3,0.002));
+                    addVehicle(r);
+                }
 	        }
-
-            frame.interaction();
-
-	        for(int i=0; i<frame.vehicules.size(); i++){
+            
+            frame.interaction();           
+            
+            for(int i=0; i<frame.vehicules.size(); i++){
 	        	frame.vehicules.get(i).move(dt);
 	        	if(!frame.vehicules.get(i).isOnTheRoad()){
 	        		frame.vehicules.remove(i);
 	        	}
 	        }
-
+            
             for(obstacle o : frame.obstacles){
                 if(o instanceof feurouge){
                     ((feurouge)o).setTimer(((feurouge)o).getTimer()+1);
                     ((feurouge)o).update(time);
                 }
             }
-
-            /*if(frame.isAnAccident()){
-            	System.out.println("Accident");
-	            frame.vehicules.clear();
-
-				timer.stop();
-				setTime(0);
-            }*/
-
             repaint();
         }
 	}
-
+    
 	public void addVehicle(Road r){
 		if(Math.random()<0.9){
 			frame.vehicules.add(new Car(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005));

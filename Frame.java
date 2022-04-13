@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.awt.Graphics;
 
 /*
 Remarques :
@@ -30,14 +29,18 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private JButton pause;
 	private JButton restart;
     private JButton trash;
-	private JSlider traffic;
+    private JSlider traffic;
 	private JSlider rapidite;
 	private JSlider aggressivite;
-
+    private JLabel labelTime;
+    boolean démarré;
+    private javax.swing.Timer timer;
+    
     // bouton feu rouge
     private JButton boutonFeu;
     private JTextField valeurFeu;
     private int valfeu;
+    private double time;
     
     //bouton limitation
     private JButton boutonLimite;
@@ -46,6 +49,18 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
     
     //bouton barriere
     private JButton boutonBarriere;
+    
+    //bouton panneau stop
+    private JButton panneauStop;
+    
+    //timer
+    private JButton unite;
+    boolean unit;
+    
+    private long startTime;
+    private long elapsed;
+    private boolean running;
+    private long pauseTime;
 
 	public Frame(){
 		setTitle("K-Roof");
@@ -55,26 +70,33 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
 		// Panneau affichage
 		p1 = new DisplayPanel(this);
 		p1.setLayout(null);
+        p1.setTime(0);
 		p1.setBounds(0,0,800,800);
         p1.addMouseListener(this);
 		add(p1);
+        
+        timer = new javax.swing.Timer(10,this);
+        timer.addActionListener(this);
+        timer.start();
 
 		// Panneau interface
 		JPanel p2 = new JPanel();
 		p2.setLayout(null);
+		p2.setBackground(new Color(230,230,230));
 		p2.setBounds(800,0,300,800);
 		add(p2);
-
+        
 		// bouton start
 		start = new JButton(new ImageIcon("Images/start.png"));
 		start.setBounds(10,680,135,50);
 		start.setBackground(new Color(0,170,0));
 		start.addActionListener(this);
 		p2.add(start);
+        start.setVisible(false);
+        start.setVisible(true);
 
 		// bouton pause
 		pause = new JButton(new ImageIcon("Images/pause.png"));
@@ -83,15 +105,20 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		pause.addActionListener(this);
 		p2.add(pause);
 		pause.setEnabled(false); 				// desactive le bouton au debut
+        pause.setVisible(false);
+        pause.setVisible(true);
 
 		// bouton restart
-		restart = new JButton("Recommencer");
-		restart.setBounds(10,740,280,50);
+		restart = new JButton(new ImageIcon("Images/stop.png"));
+		restart.setBounds(155,740,135,50);
+        restart.setBackground(new Color(20,20,20));
 		restart.addActionListener(this);
 		p2.add(restart);
 		restart.setEnabled(false); 				// desactive le bouton au debut
-
-		// curseur trafic
+        restart.setVisible(false);
+        restart.setVisible(true);
+        
+        // curseur trafic
 		traffic = new JSlider(0,100,20);
 		traffic.setBounds(10,10,280,50);
 		traffic.setMinorTickSpacing(5);
@@ -99,6 +126,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		traffic.setPaintTicks(true);
 		traffic.setPaintLabels(true);
 		p2.add(traffic);
+        traffic.setVisible(false);
+        traffic.setVisible(true);
 
 		// curseur conduite rapide
 		rapidite = new JSlider(0,100,20);
@@ -108,6 +137,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		rapidite.setPaintTicks(true);
 		rapidite.setPaintLabels(true);
 		p2.add(rapidite);
+        rapidite.setVisible(false);
+        rapidite.setVisible(true);
 
 		// curseur aggressivite
 		aggressivite = new JSlider(0,100,20);
@@ -117,6 +148,29 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		aggressivite.setPaintTicks(true);
 		aggressivite.setPaintLabels(true);
 		p2.add(aggressivite);
+        aggressivite.setVisible(false);
+        aggressivite.setVisible(true);
+        
+        //timer
+        labelTime = new JLabel();
+        labelTime.setBounds(36,585,400,30);
+        labelTime.setBackground(new Color(230,230,230));
+        labelTime.setFont(new Font("Arial", Font.PLAIN, 20));
+        labelTime.setText("Temps écoulé : "+p1.getTime()+" ms");
+        p2.add(labelTime);
+        labelTime.setVisible(false);
+        labelTime.setVisible(true);
+        
+        //unité
+        unite = new JButton(new ImageIcon("Images/seconde.png"));
+ 		unite.setBounds(10,590,20,20);
+		unite.setBackground(new Color(0,0,255));
+		unite.addActionListener(this);
+		p2.add(unite);
+		unite.setEnabled(true);
+        unite.setVisible(false);
+        unite.setVisible(true);
+        unit=true;
         
         //bouton trash
         trash = new JButton(new ImageIcon("Images/corbeille.png"));
@@ -124,66 +178,123 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		trash.setBackground(new Color(191,191,191));
 		trash.addActionListener(this);
 		p2.add(trash);
-		trash.setEnabled(true); 
+		trash.setEnabled(true);
+        trash.setVisible(false);
+        trash.setVisible(true);
         
         //bouton feu rouge
 		boutonFeu = new JButton(new ImageIcon("Images/feurouge.png"));
-		boutonFeu.setBounds(20,195,60,135);
+		boutonFeu.setBounds(20,295,60,135);
 		boutonFeu.addMouseListener(this);
-        boutonFeu.setVisible(true);
 		p2.add(boutonFeu);
+        boutonFeu.setVisible(false);
+        boutonFeu.setVisible(true);        
+        
         
         //valeur feu rouge
         valeurFeu = new JTextField("Intervalle");
-        valeurFeu.setBounds(20,340,60,30);
-        valeurFeu.setVisible(true);
+        valeurFeu.setBounds(20,440,60,30);
         p2.add(valeurFeu);
+        valeurFeu.setVisible(false);
+        valeurFeu.setVisible(true);
         
         // bouton limites
 		boutonLimite = new JButton(new ImageIcon("Images/limitation.png"));
-		boutonLimite.setBounds(100,195,70,70);
+		boutonLimite.setBounds(100,295,70,70);
 		boutonLimite.addMouseListener(this);
-        boutonLimite.setVisible(true);
 		p2.add(boutonLimite);
+        boutonLimite.setVisible(false);
+        boutonLimite.setVisible(true);
         
         //valeur limites
         valeurLimite = new JTextField("Limite");
-        valeurLimite.setBounds(100,340,70,30);
-        valeurLimite.setVisible(true);
+        valeurLimite.setBounds(100,440,70,30);
         p2.add(valeurLimite);
+        valeurLimite.setVisible(false);
+        valeurLimite.setVisible(true);
         
         //bouton barrière
         boutonBarriere = new JButton(new ImageIcon("Images/barriere.png"));
-        boutonBarriere.setBounds(190,195,62,40);
+        boutonBarriere.setBounds(190,295,62,40);
 		boutonBarriere.addMouseListener(this);
-        boutonBarriere.setVisible(true);
         p2.add(boutonBarriere);
+        boutonBarriere.setVisible(false);
+        boutonBarriere.setVisible(true);
+        
+        //panneau stop
+        panneauStop = new JButton(new ImageIcon("Images/Panneau stop.png"));
+        panneauStop.setBounds(190,350,61,61);
+        panneauStop.addMouseListener(this);
+        panneauStop.setVisible(true);
+        p2.add(panneauStop);
+        panneauStop.setVisible(false);
+        panneauStop.setVisible(true);
+
+
+		/*for(Road r : routes){
+			for(int j=0; j<800; j+=50){
+				allVehicules.add(new Car(0.3, r, j));
+				vehicules.add(new Car(0.3, r, j));
+			}
+		}*/
+
+        démarré=true;
 	}
 
 
 	public void actionPerformed(ActionEvent e){
+        
+        if(e.getSource()==timer&&démarré){
+            if(unit){
+                labelTime.setText("Temps écoulé : "+(this.getElapsed()/1000)+" s");
+            } else {
+                labelTime.setText("Temps écoulé : "+(this.getElapsed())+" ms");
+            }
 
+        }
+        
+        if(e.getSource() == unite){
+            if(unit){
+                unite.setIcon(new ImageIcon("Images/milliseconde.png"));
+                unit=!unit;
+            } else {
+                unite.setIcon(new ImageIcon("Images/seconde.png"));
+                unit=!unit;
+            }
+
+		}
+        
 		if(e.getSource() == start){
+            startTime = System.currentTimeMillis();
+            running=true;
+            démarré=true;
 			start.setEnabled(false);
 			pause.setEnabled(true);
 			restart.setEnabled(true);
 			//init.setEnabled(false);
-
 			p1.getTimer().start(); // commence le chrono dans p1 (DisplayPanel) lorsqu'on appuie sur le bouton
+            
 		}
 
-		if(e.getSource() == pause){				// met en pause la simulation
+		if(e.getSource() == pause){
+            // met en pause la simulation
+            pauseTime=System.currentTimeMillis();
+            elapsed=elapsed+System.currentTimeMillis()-startTime;
+            running=false;
 			p1.getTimer().stop();
 			pause.setEnabled(false);
 			start.setEnabled(true);
+			//init.setEnabled(true);
 		}
 
 		if(e.getSource() == restart){
+            elapsed=0;
+            running = false; 
 			pause.setEnabled(false);
 			restart.setEnabled(false);
-			start.setEnabled(true);
+			//init.setEnabled(true);
 
-			vehicules.clear();
+			vehicules.clear();			// A changer
 
 			p1.repaint();
 
@@ -192,7 +303,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
             
             valeurFeu.setText("Intervalle");
             valeurLimite.setText("Limite");
+
+			start.setEnabled(true);
 		}
+
+		//if(e.getSource() == init){
+		//	int NumberOfVehicles = (int) traffic.getValue();
+		//}
         
         if(e.getSource() == trash){
             ArrayList<obstacle> supprimer = new ArrayList<>();
@@ -225,6 +342,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
             } else if(e.getSource()==boutonBarriere){
                 appuyé=true;
                 quoi="barriere";
+            } else if (e.getSource()==panneauStop){
+                appuyé=true;
+                quoi="stop";
             }
         }
         }
@@ -245,6 +365,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
         } else if (e.getSource()==boutonBarriere&&SwingUtilities.isLeftMouseButton(e)&&!select){ //barriere
             select=true;
             quoi="barriere";
+        } else if (e.getSource()==panneauStop&&SwingUtilities.isLeftMouseButton(e)&&!select){ //panneau stop
+            select=true;
+            quoi="stop";
         } else if (select&&quoi.equals("feurouge")){
             if(e.getSource()==p1&&SwingUtilities.isLeftMouseButton(e)){
                 ajouterElement("feurouge");
@@ -266,6 +389,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
             } else {
                 select=false;
             }
+        } else if (select&&quoi.equals("stop")){
+            if(e.getSource()==p1&&SwingUtilities.isLeftMouseButton(e)){
+                ajouterElement("stop");
+                select=false;
+            } else {
+                select=false;
+            }
         }
     }
 
@@ -275,7 +405,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	public void keyTyped(KeyEvent e){}
 
-        public void ajouterElement(String valeur){
+    public void ajouterElement(String valeur){
             PointerInfo a = MouseInfo.getPointerInfo();
             Point b = a.getLocation();
             int x = (int) b.getX()-this.getLocationOnScreen().x;
@@ -306,6 +436,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
                         barriere bar=new barriere(x,y,routes[pos]);
                         obstacles.add(bar);
                         p1.repaint();
+                    } else if (valeur.equals("stop")){   //panneau stop
+                        stop pstop=new stop(x,y,routes[pos]);
+                        obstacles.add(pstop);
+                        p1.repaint();
                     }
                 }
             }
@@ -335,19 +469,27 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
         return rep;
     }
     
-    public static boolean isInt(String strNum) {
-	    if (strNum == null) {
-	        return false;
-	    }
-	    try {
-	        int d = Integer.parseInt(strNum);
-	    } catch (NumberFormatException nfe) {
-	        return false;
-	    }
-	    return true;
-	}
+        public static boolean isInt(String strNum) {
+    if (strNum == null) {
+        return false;
+    }
+    try {
+        int d = Integer.parseInt(strNum);
+    } catch (NumberFormatException nfe) {
+        return false;
+    }
+    return true;
+}
 
-	public int getTraffic(){
+    public long getElapsed() {
+        if (running) {
+            return elapsed + System.currentTimeMillis() - startTime;
+        } else {
+            return elapsed;
+        }
+    }
+    
+    	public int getTraffic(){
 		return traffic.getValue();
 	}
 
