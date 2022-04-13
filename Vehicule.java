@@ -139,7 +139,7 @@ public abstract class Vehicule {
 	}
 
 	public int getSafePosition(){
-		return (int) getBack - safeDistance;
+		return (int) getBack() - safeDistance;
 	}
 
 	public int getFront(){
