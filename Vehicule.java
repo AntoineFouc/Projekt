@@ -139,15 +139,15 @@ public abstract class Vehicule {
 	}
 
 	public int getSafePosition(){
-		return (int) position - safeDistance - size[0]/2;
+		return (int) getBack - safeDistance;
 	}
 
 	public int getFront(){
-		return (int) position + size[1]/2;
+		return (int) position + size[0]/2;
 	}
 
 	public int getBack(){
-		return (int) position - size[1]/2;
+		return (int) position - size[0]/2;
 	}
 
 	public Rectangle getRectangle(){
