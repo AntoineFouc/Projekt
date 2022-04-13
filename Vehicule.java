@@ -45,7 +45,7 @@ public abstract class Vehicule {
 	}
 
 	public void stopAt(double x){
-		accel = - speed / (x-position);
+		accel = - Math.pow(speed,2) / (x-position);
 	}
 
 	public void deccel(){
