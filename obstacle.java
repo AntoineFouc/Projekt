@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 
-public abstract class obstacle implements Comparable{
+public abstract class obstacle implements Comparable<obstacle>{
 
     protected int x;
     protected int y;
@@ -14,21 +14,49 @@ public abstract class obstacle implements Comparable{
         x=uneposx;
         y=uneposy;
         road=route;
-        position=position=(x-road.getStartingPoint()[0])*Math.cos(road.getOrientation()*Math.PI/180)+(road.getStartingPoint()[1]-y)*Math.sin(road.getOrientation()*Math.PI/180);
+        
     }
     
     public void draw(Graphics g){
-    }
-    public void setObstacles(ArrayList<obstacle> o){
-	obstacles = o;
-    }
+	}
+
     public double getPosition(){
+        position=(x-road.getStartingPoint()[0])*Math.cos(road.getOrientation()*Math.PI/180)+(road.getStartingPoint()[1]-y)*Math.sin(road.getOrientation()*Math.PI/180);
 	return position;
     }
     
-    public Road getRoad(){
-	return road;
-    }
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public Road getRoad() {
+		return road;
+	}
+
+	public void setRoad(Road road) {
+		this.road = road;
+	}
+
+	public ArrayList<obstacle> getObstacles() {
+		return obstacles;
+	}
+	
+    public void setObstacles(ArrayList<obstacle> o){
+		obstacles = o;
+	}
     
     public int compareTo(obstacle obs){
         int res;
@@ -41,5 +69,4 @@ public abstract class obstacle implements Comparable{
         }
         return res;
     }
-	
 }
