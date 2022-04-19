@@ -35,4 +35,8 @@ public class limitation extends obstacle{
         return limite;
     }
     
+    public int compareTo(Object obs){
+        return(this.compareTo(obs));
+    }
+    
 }

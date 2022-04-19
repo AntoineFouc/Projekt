@@ -46,5 +46,8 @@ public class barriere extends obstacle{
 
 		}
 	}
-     
+    
+    public int compareTo(Object obs){
+        return(this.compareTo(obs));
+    }     
 }

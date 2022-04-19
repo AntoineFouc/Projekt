@@ -55,4 +55,8 @@ public class feurouge extends obstacle{
             timer=0;
         }
     }
+    
+    public int compareTo(Object obs){
+        return(this.compareTo(obs));
+    }
 }

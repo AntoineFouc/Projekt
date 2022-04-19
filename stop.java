@@ -22,5 +22,9 @@ public class stop extends obstacle{
                 g2d.drawImage(new ImageIcon("Images/panneau stop.png").getImage(), x-30, 351-40, 50, 50, null);
 }
     }
+    
+    public int compareTo(Object obs){
+        return(this.compareTo(obs));
+    }
 }
  
