@@ -69,8 +69,11 @@ public class DisplayPanel extends JPanel implements ActionListener{
                     addVehicle(r);
                 }
 	        }
+            //frame.classementEntites();
+            frame.majNextObstacle();
+            frame.interaction();        
             
-            frame.interaction();           
+            
             
             for(int i=0; i<frame.vehicules.size(); i++){
 	        	frame.vehicules.get(i).move(dt);
@@ -93,15 +96,29 @@ public class DisplayPanel extends JPanel implements ActionListener{
 		if(Math.random()<0.9){
 			Vehicule newCar = new Car(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005);
 			frame.vehicules.add(newCar);
-			if(frame.getObstaclesRoute(r.getOrientation()).size() !=0) {
-				newCar.setNextObstacle(frame.getObstaclesRoute(r.getOrientation()).get(0));
+			frame.vehiculesParRoute.get((int) r.getOrientation()/90).addFirst(newCar);
+			if(frame.vehiculesParRoute.get(r.getOrientation()/90).size()>1){
+				
+				newCar.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation()/90).get(1));
+			}else{newCar.setNextVehicule(null);}
+			
+			
+			if(frame.sortObstaclesRoute(r.getOrientation()).size() !=0) {
+				newCar.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
 		}else{
 			Truck newTruck = new Truck(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005);
 			frame.vehicules.add(newTruck);
-			if(frame.getObstaclesRoute(r.getOrientation()).size() !=0) {
-				newTruck.setNextObstacle(frame.getObstaclesRoute(r.getOrientation()).get(0));
+			frame.vehiculesParRoute.get((int) r.getOrientation()/90).addFirst(newTruck);	
+			if(frame.vehiculesParRoute.get(r.getOrientation()/90).size()>1){
+				newTruck.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation()/90).get(1));
+			}else{newTruck.setNextVehicule(null);}
+			
+			
+			if(frame.sortObstaclesRoute(r.getOrientation()).size() !=0) {
+				newTruck.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
+			
 		}
 	}
 }

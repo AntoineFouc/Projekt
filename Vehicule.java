@@ -8,14 +8,19 @@ Vitesse reelle : 1 px/ms = 600 km/h
 */
 
 
-public abstract class Vehicule {
+public abstract class Vehicule implements Comparable<Vehicule>{
 	protected double position;
 	protected double maxSpeed;
 	protected double speed;						// en pixel par ms
 	protected double maxAccel;
 	protected double accel;						// acceleration
 	protected obstacle nextObstacle;
+	protected int prio=0;
 	protected Vehicule nextVehicule;
+	protected int ObstaclesCompteur;
+
+
+
 
 	protected int safeDistance;					// cte pour le moment
 	protected int[] size = new int[2];			// taille longueur puis largeur
@@ -160,6 +165,31 @@ public abstract class Vehicule {
 		return (int) position - size[0]/2;
 	}
 
+	public int getPrio() {
+		return prio;
+	}
+
+	public void setPrio(int prio) {
+		this.prio = prio;
+	}
+	
+
+	public int getObstaclesCompteur() {
+		return ObstaclesCompteur;
+	}
+
+	public void setObstaclesCompteur(int obstaclesCompteur) {
+		ObstaclesCompteur = obstaclesCompteur;
+	}
+
+	public Vehicule getNextVehicule() {
+		return nextVehicule;
+	}
+
+	public void setNextVehicule(Vehicule nextVehicule) {
+		this.nextVehicule = nextVehicule;
+	}
+
 	public Rectangle getRectangle(){
 		Rectangle r = new Rectangle();
 		switch(road.getOrientation()){
@@ -183,4 +213,16 @@ public abstract class Vehicule {
 		if(accel!=0) System.out.println("A = " + accel);
 	}
 
+	
+    public int compareTo(Vehicule v){
+        int res;
+        if(this.getPosition()>v.getPosition()){
+            res=1;
+        } else if (this.getPosition()==v.getPosition()){
+            res=0;
+        } else {
+            res=-1;
+        }
+        return res;
+    }
 }

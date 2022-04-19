@@ -14,9 +14,12 @@ Faire une méthode dans vehicule qui permet de les reset
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener{
 
 	public Road[] routes = {new Road(800,370,0,370), new Road(0,430,800,430), new Road(370,0,370,800), new Road(430,800,430,0)};
-
-
-	public ArrayList<Vehicule> allVehicules = new ArrayList<Vehicule>();
+	public ArrayList<LinkedList<Vehicule>> vehiculesParRoute = new ArrayList<LinkedList<Vehicule>>();
+	public LinkedList<Vehicule> route1 = new LinkedList<Vehicule>();
+	public LinkedList<Vehicule> route2 = new LinkedList<Vehicule>();
+	public LinkedList<Vehicule> route3 = new LinkedList<Vehicule>();
+	public LinkedList<Vehicule> route4 = new LinkedList<Vehicule>();
+	
 	public ArrayList<Vehicule> vehicules = new ArrayList<Vehicule>();		// liste des vehicules PRESENTS
 	public ArrayList<obstacle> allObstacles = new ArrayList<obstacle>();       // liste des obstacles PRESENTS
 
@@ -63,6 +66,12 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private long pauseTime;
 
 	public Frame(){
+		vehiculesParRoute.add(route1);
+		vehiculesParRoute.add(route2);
+		vehiculesParRoute.add(route3);
+		vehiculesParRoute.add(route4);
+		
+		
 		setTitle("K-Roof");
 		setLayout(null);
 		setSize(1115,840);
@@ -229,15 +238,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(panneauStop);
 		panneauStop.setVisible(false);
 		panneauStop.setVisible(true);
-
-
-		/*for(Road r : routes){
-			for(int j=0; j<800; j+=50){
-				allVehicules.add(new Car(0.3, r, j));
-				vehicules.add(new Car(0.3, r, j));
-			}
-		}*/
-
 		démarré=true;
 	}
 
@@ -524,8 +524,11 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		}
 		return false;
 	}
+
 	
-	public ArrayList<obstacle>  getObstaclesRoute (int RoadOrientation) {
+	// méthode de classement des obstacles sur une route
+	public ArrayList<obstacle>  sortObstaclesRoute (int RoadOrientation) {
+		
 		ArrayList<obstacle> thisRouteObstacles = new ArrayList<obstacle>();
 		for(obstacle Obs : allObstacles) {
 			if(Obs.getRoad().getOrientation() == RoadOrientation) {
@@ -535,25 +538,105 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		Collections.sort(thisRouteObstacles);
 		return thisRouteObstacles;
 	}
-	/*
-	public void setNextVehicule() {
-		for(Vehicule v : vehicules) {
-			for(Vehicule v : vehicules)
+
+	
+	public obstacle chercheNextObstacle(Road route, double posVehicule, int compteur) {
+		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(route.getOrientation());
+			int i = 0;
+			while(listOfObstacles.get(i).getPosition()<posVehicule) {
+				i++;
+			}
+			if(i==0) {
+				return null;
+			}else {
+				return listOfObstacles.get(i);
+			}
+	}
+	
+	public boolean isAnObstacle(Road route, int compteur) {
+		if(sortObstaclesRoute(route.getOrientation()).size()-compteur==0) {
+			return false;
+		}else {
+			return true;
 		}
 	}
-	*/
-
-	// intéractions entre les entités
+	
+	
+	public void majNextObstacle() {
+		for(Vehicule v : vehicules) {
+			if(v.getNextObstacle()!=null) {
+				if(v.getNextObstacle().getPosition()<v.getFront()) {
+					v.setObstaclesCompteur(v.getObstaclesCompteur()+1);
+				}
+				if(isAnObstacle(v.getRoad(),v.getObstaclesCompteur())) {
+					v.setNextObstacle(chercheNextObstacle(v.getRoad(),v.getFront(),v.getObstaclesCompteur()));
+				}
+			}
+		}
+	}
+	
+	
+	
 	public void interaction(){
+		for(LinkedList<Vehicule> maRoute : vehiculesParRoute) {
+			for(int i=0;i<maRoute.size()-1;i++) {
+				maRoute.get(i).setPrio(0);
+				if(maRoute.get(i).getNextObstacle()!=null) {
+					if(maRoute.get(i+1).getSafePosition()<maRoute.get(i).getNextObstacle().getPosition()) {
+						maRoute.get(i).setPrio(1);
+					}else {
+						maRoute.get(i).setPrio(2);
+					}
+				}
+			}
+			if(maRoute.get(maRoute.size()-1).getNextObstacle()!=null) {
+				maRoute.get(maRoute.size()-1).setPrio(2);
+			}
+		}
+		
+		for(Vehicule v : vehicules){
+			switch(v.getPrio()){
+			case 1: 
+				v.deccelTo(v.getNextVehicule().getSpeed());
+				break;
+			case 2:
+	
+				break;
+	
+			case 3:
+	
+				break;
+			default:
+				v.accel();
+				break;
+			}
+		}
+		/*
 		for(Vehicule v1 : vehicules){
-
+			// Ordre des priorités dans les interactions :
+			// 0 : Pas de danger
+			// 1 : danger lointain (distance de sécurité avec le véhicule devant)
+			// 2 : Intersection / arrêt nécessaire
+			//
+			
 			int prio=0;
-			/*
-			Ordre des priorités dans les interactions :
-			0 : Pas de danger
-			1 : danger lointain (distance de sécurité avec le véhicule devant)
-			2 : Intersection / arrêt nécessaire
-			 */
+			if(v1.getNextVehicule()!=null && v1.getNextObstacle()!=null) {
+				if(v1.getNextVehicule().getSafePosition()<v1.getNextObstacle().getPosition()) {
+					prio=1;
+				}else {
+					prio=2;
+				}
+			}
+		}
+		*/
+
+			// Inter-véhicules
+
+		
+		
+		/*
+		for(Vehicule v1 : vehicules){
+			int prio=0;
 			for(Vehicule v2 : vehicules){
 				if(!v1.equals(v2)){
 					if(v1.getRoad().equals(v2.getRoad()) && v1.getPosition()<v2.getPosition() && v2.getSafePosition()<v1.getFront() && prio <1){
@@ -563,12 +646,69 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 						v1.accel();
 					}
 				}
-				/*Compléter les intéractions ici*/
+					//Compléter les intéractions ici
 			}
 		}
+		*/
+		
 	}
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+// méthode de classement des véhicules sur une route
+public ArrayList<Vehicule> classementVehiculesRoute (int RoadOrientation){
+	ArrayList<Vehicule> thisRouteVehicules = new ArrayList<Vehicule>();
+	for(Vehicule v : vehicules) {
+		if(v.getRoad().getOrientation() == RoadOrientation) {
+			thisRouteVehicules.add(v);
+		}
+	}
+	return thisRouteVehicules;
+}
+ */
+
+
+/*
+public void setNextVehicule() {
+	for(Vehicule v : vehicules) {
+		for(Vehicule v : vehicules)
+	}
+}
+ */
+
+// intéractions entre les entités
+
+/*
+public void classementEntites () {
+// rangement des véhicules sur les routes
+		for(int i=0;i<routes.length;i++) {
+			// si il y a plus d'un véhicule
+			/*if(vehicules.size()>1) {
+				// classe tous les véhicules sur une route
+				ArrayList<Vehicule> ListVehiculesRoute = classementVehiculesRoute(routes[i].getOrientation());
+				for(int j=0; j<ListVehiculesRoute.size()-1; j++) {
+					ListVehiculesRoute.get(j).setNextVehicule(ListVehiculesRoute.get(j+1));
+				}
+				ListVehiculesRoute.get(ListVehiculesRoute.size()-1).setNextVehicule(null);
+			}
+			if(allObstacles.size()!=0) {
+				ArrayList<obstacle> ListOfObstaclesRoute = getObstaclesRoute(routes[i].getOrientation());
+			}
+		}
+}
+*/
 
 
 
