@@ -33,7 +33,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
         	if(time!=0) c.move(dt);
         	c.draw(g);
         }
-        for(obstacle o : frame.obstacles){
+        for(obstacle o : frame.allObstacles){
             if(!o.equals(null)){
                 o.draw(g);
             }
@@ -79,7 +79,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
 	        	}
 	        }
             
-            for(obstacle o : frame.obstacles){
+            for(obstacle o : frame.allObstacles){
                 if(o instanceof feurouge){
                     ((feurouge)o).setTimer(((feurouge)o).getTimer()+1);
                     ((feurouge)o).update(time);
