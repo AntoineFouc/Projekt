@@ -14,6 +14,8 @@ public abstract class Vehicule {
 	protected double speed;						// en pixel par ms
 	protected double maxAccel;
 	protected double accel;						// acceleration
+	protected obstacle nextObstacle;
+	protected Vehicule nextVehicule;
 
 	protected int safeDistance;					// cte pour le moment
 	protected int[] size = new int[2];			// taille longueur puis largeur
@@ -132,6 +134,14 @@ public abstract class Vehicule {
 
 	public void setPicture(ImageIcon i){
 		picture = i;
+	}
+
+	public obstacle getNextObstacle() {
+		return nextObstacle;
+	}
+
+	public void setNextObstacle(obstacle nextObstacle) {
+		this.nextObstacle = nextObstacle;
 	}
 
 	public void setSafeDistance(){

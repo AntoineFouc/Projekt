@@ -9,7 +9,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-public class barriere extends obstacle{
+public class barriere extends obstacle implements Comparable<obstacle>{
     
     protected Road voiebloq;
     
@@ -46,8 +46,5 @@ public class barriere extends obstacle{
 
 		}
 	}
-    
-    public int compareTo(Object obs){
-        return(this.compareTo(obs));
-    }     
+  
 }

@@ -535,6 +535,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		Collections.sort(thisRouteObstacles);
 		return thisRouteObstacles;
 	}
+	/*
+	public void setNextVehicule() {
+		for(Vehicule v : vehicules) {
+			for(Vehicule v : vehicules)
+		}
+	}
+	*/
 
 	// intéractions entre les entités
 	public void interaction(){

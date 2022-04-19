@@ -1,7 +1,8 @@
 import java.awt.*;
 import javax.swing.*;
+import java.util.*;
 
-public class feurouge extends obstacle{
+public class feurouge extends obstacle implements Comparable<obstacle>{
     
     protected Road voiebloq;
     protected int temps;
@@ -54,9 +55,5 @@ public class feurouge extends obstacle{
             }
             timer=0;
         }
-    }
-    
-    public int compareTo(Object obs){
-        return(this.compareTo(obs));
     }
 }

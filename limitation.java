@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class limitation extends obstacle{
+public class limitation extends obstacle implements Comparable<obstacle>{
     
     protected Road voiebloq;
     protected int valeur;
@@ -33,10 +33,6 @@ public class limitation extends obstacle{
     public int getLimite(){
         int limite=valeur;
         return limite;
-    }
-    
-    public int compareTo(Object obs){
-        return(this.compareTo(obs));
     }
     
 }

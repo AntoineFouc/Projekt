@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class stop extends obstacle{
+public class stop extends obstacle implements Comparable<obstacle>{
     
     protected Road voiebloq;
     
@@ -21,10 +21,6 @@ public class stop extends obstacle{
 			else if (road.getOrientation() ==180){
                 g2d.drawImage(new ImageIcon("Images/panneau stop.png").getImage(), x-30, 351-40, 50, 50, null);
 }
-    }
-    
-    public int compareTo(Object obs){
-        return(this.compareTo(obs));
     }
 }
  
