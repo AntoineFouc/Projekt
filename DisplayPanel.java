@@ -91,10 +91,13 @@ public class DisplayPanel extends JPanel implements ActionListener{
     
 	public void addVehicle(Road r){
 		if(Math.random()<0.9){
-			frame.vehicules.add(new Car(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005));
+			Vehicule newCar = new Car(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005);
+			frame.vehicules.add(newCar);
+			newCar.setNextObstacle(frame.getObstaclesRoute(r.getOrientation()).get(1));
 		}else{
-			frame.vehicules.add(new Truck(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005));
+			Truck newTruck = new Truck(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005);
+			frame.vehicules.add(newTruck);
+			newTruck.setNextObstacle(frame.getObstaclesRoute(r.getOrientation()).get(1));
 		}
-
 	}
 }
