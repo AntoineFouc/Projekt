@@ -22,3 +22,10 @@ A faire ensuite :
 - un passage piéton avec des mamies qui traversent, le chat qui reste bloqué dans l'arbre et les pompiers qui débarquent, 
 les aliens qui ont plus de carburant et puis merde c'est trop cher 2 euros donc et vas y que je laisse ma soucoupe sur l'autoroute, 
 les gendarmes de saint tropez se ramènent mais jawad dit que c'était pour rendre service du coup lénine se ramène et bref j'ai raté mon avion.
+
+BRANCHE TEMP :
+fait :
+- chaque véhicule sait quel est le prochain obstacle (mais ne sait pas quel obstacle c'est)
+- chaque véhicule met à jour le prochain obstacle quand il le passe, et connait la voiture suivante (nouveaux attributs nextVehicule et nextObstacle)
+- chaque route a sa linkedlist de véhicules qui lui permet d'avoir les véhicules dans l'ordre
+- nouvelle méthode pour mettre en ordre les obstacles sur une route donnée
