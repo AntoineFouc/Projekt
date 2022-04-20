@@ -20,17 +20,11 @@ public class Road{
         croisement[1]=430;
         if(x2<=x1){
             orientation = 180 + (int) ( 180/3.14159*Math.atan((1.0*y2-y1)/(x2-x1)) ); // division avec des "double"
-            croisement[0]=430;
-            croisement[1]=370;
         }else{
             orientation = (int) ( 180/3.14159*Math.atan((1.0*y2-y1)/(x2-x1)) );
         }
         if(orientation<0) orientation += 360;
-        
-        if (y2<=y1){
-            croisement[0]=430;
-            croisement[1]=370;
-        }
+ 
     }
 
     public boolean equals(Road r){
