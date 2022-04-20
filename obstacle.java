@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.util.*;
 
 public abstract class obstacle implements Comparable<obstacle>{
-
+	protected String name = "default";
     protected int x;
     protected int y;
     protected Road road;
@@ -69,4 +69,16 @@ public abstract class obstacle implements Comparable<obstacle>{
         }
         return res;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setPosition(double position) {
+		this.position = position;
+	}
 }

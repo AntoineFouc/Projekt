@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class barriere extends obstacle implements Comparable<obstacle>{
-    
     protected Road voiebloq;
     
     public barriere(int uneposx,int uneposy,Road unevoiebloq){
@@ -43,7 +42,6 @@ public class barriere extends obstacle implements Comparable<obstacle>{
                 g2d.drawImage(op.filter(pic, null), x, 351-10, 40, 62, null);
                 //rotation puis placement
             }
-
 		}
 	}
   

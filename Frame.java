@@ -543,7 +543,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public obstacle chercheNextObstacle(Road route, double posVehicule, int compteur) {
 		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(route.getOrientation());
 			int i = 0;
-			while(listOfObstacles.get(i).getPosition()<posVehicule) {
+			while(listOfObstacles.get(i).getPosition()<posVehicule && listOfObstacles.size()<i) {
 				i++;
 			}
 			if(i==0) {
@@ -566,10 +566,11 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		for(Vehicule v : vehicules) {
 			if(v.getNextObstacle()!=null) {
 				if(v.getNextObstacle().getPosition()<v.getFront()) {
+					v.setNextObstacle(null);
 					v.setObstaclesCompteur(v.getObstaclesCompteur()+1);
-				}
-				if(isAnObstacle(v.getRoad(),v.getObstaclesCompteur())) {
-					v.setNextObstacle(chercheNextObstacle(v.getRoad(),v.getFront(),v.getObstaclesCompteur()));
+					if(isAnObstacle(v.getRoad(),v.getObstaclesCompteur())) {
+						v.setNextObstacle(chercheNextObstacle(v.getRoad(),v.getFront(),v.getObstaclesCompteur()));
+					}
 				}
 			}
 		}
@@ -578,19 +579,37 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	
 	
 	public void interaction(){
+		
+		
 		for(LinkedList<Vehicule> maRoute : vehiculesParRoute) {
 			for(int i=0;i<maRoute.size()-1;i++) {
 				maRoute.get(i).setPrio(0);
-				if(maRoute.get(i).getNextObstacle()!=null) {
-					if(maRoute.get(i+1).getSafePosition()<maRoute.get(i).getNextObstacle().getPosition()) {
+				if(maRoute.get(i).getNextObstacle()!=null && maRoute.get(i).getNextVehicule()!=null) {
+					if(maRoute.get(i+1).getSafePosition()<maRoute.get(i).getNextObstacle().getPosition() && maRoute.get(i).getNextObstacle().getPosition()-maRoute.get(i).getPosition()<100) {
 						maRoute.get(i).setPrio(1);
 					}else {
-						maRoute.get(i).setPrio(2);
+						if(maRoute.get(i).getNextObstacle() instanceof feurouge) {
+							maRoute.get(i).setPrio(2);
+						}else if(maRoute.get(i).getNextObstacle() instanceof barriere) {
+							maRoute.get(i).setPrio(3);
+						}else if(maRoute.get(i).getNextObstacle() instanceof limitation) {
+							maRoute.get(i).setPrio(4);
+						}else if(maRoute.get(i).getNextObstacle() instanceof stop) {
+							maRoute.get(i).setPrio(5);
+						}
 					}
 				}
 			}
 			if(maRoute.get(maRoute.size()-1).getNextObstacle()!=null) {
-				maRoute.get(maRoute.size()-1).setPrio(2);
+				if(maRoute.get(maRoute.size()-1).getNextObstacle().name=="feuRouge") {
+					maRoute.get(maRoute.size()-1).setPrio(2);
+				}else if(maRoute.get(maRoute.size()-1).getNextObstacle().name=="barriere") {
+					maRoute.get(maRoute.size()-1).setPrio(3);
+				}else if(maRoute.get(maRoute.size()-1).getNextObstacle().name=="limitation") {
+					maRoute.get(maRoute.size()-1).setPrio(4);
+				}else if(maRoute.get(maRoute.size()-1).getNextObstacle().name=="stop") {
+					maRoute.get(maRoute.size()-1).setPrio(5);
+				}
 			}
 		}
 		
@@ -599,116 +618,43 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			case 1: 
 				v.deccelTo(v.getNextVehicule().getSpeed());
 				break;
+			/* CHANTIER
 			case 2:
-	
+				if(((feurouge)v.getNextObstacle()).getEtat()==1) {
+					if(v.getNextObstacle().getPosition()-v.getPosition()<v.getSafePosition()) {
+						//si la position du véhicule est proche de moins d'une "safeposition" de l'obstacle : ne fait rien
+						v.accel();
+						break;
+					}else {
+						v.stopAt(v.getNextObstacle().getPosition());
+						break;
+					}
+				}else if(((feurouge)v.getNextObstacle()).getEtat()==2) {
+					v.stopAt(v.getNextObstacle().getPosition());
+					break;
+				}
+					
+				
 				break;
-	
 			case 3:
+				
+				break;
+			case 4:
+				
+				break;
+			case 5:
 	
 				break;
+			*/
 			default:
 				v.accel();
 				break;
 			}
 		}
-		/*
-		for(Vehicule v1 : vehicules){
-			// Ordre des priorités dans les interactions :
-			// 0 : Pas de danger
-			// 1 : danger lointain (distance de sécurité avec le véhicule devant)
-			// 2 : Intersection / arrêt nécessaire
-			//
-			
-			int prio=0;
-			if(v1.getNextVehicule()!=null && v1.getNextObstacle()!=null) {
-				if(v1.getNextVehicule().getSafePosition()<v1.getNextObstacle().getPosition()) {
-					prio=1;
-				}else {
-					prio=2;
-				}
-			}
-		}
-		*/
-
-			// Inter-véhicules
-
-		
-		
-		/*
-		for(Vehicule v1 : vehicules){
-			int prio=0;
-			for(Vehicule v2 : vehicules){
-				if(!v1.equals(v2)){
-					if(v1.getRoad().equals(v2.getRoad()) && v1.getPosition()<v2.getPosition() && v2.getSafePosition()<v1.getFront() && prio <1){
-						prio = 1;
-						v1.deccelTo(v2.getSpeed());
-					}else if(prio==0){
-						v1.accel();
-					}
-				}
-					//Compléter les intéractions ici
-			}
-		}
-		*/
 		
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-// méthode de classement des véhicules sur une route
-public ArrayList<Vehicule> classementVehiculesRoute (int RoadOrientation){
-	ArrayList<Vehicule> thisRouteVehicules = new ArrayList<Vehicule>();
-	for(Vehicule v : vehicules) {
-		if(v.getRoad().getOrientation() == RoadOrientation) {
-			thisRouteVehicules.add(v);
-		}
-	}
-	return thisRouteVehicules;
-}
- */
-
-
-/*
-public void setNextVehicule() {
-	for(Vehicule v : vehicules) {
-		for(Vehicule v : vehicules)
-	}
-}
- */
-
-// intéractions entre les entités
-
-/*
-public void classementEntites () {
-// rangement des véhicules sur les routes
-		for(int i=0;i<routes.length;i++) {
-			// si il y a plus d'un véhicule
-			/*if(vehicules.size()>1) {
-				// classe tous les véhicules sur une route
-				ArrayList<Vehicule> ListVehiculesRoute = classementVehiculesRoute(routes[i].getOrientation());
-				for(int j=0; j<ListVehiculesRoute.size()-1; j++) {
-					ListVehiculesRoute.get(j).setNextVehicule(ListVehiculesRoute.get(j+1));
-				}
-				ListVehiculesRoute.get(ListVehiculesRoute.size()-1).setNextVehicule(null);
-			}
-			if(allObstacles.size()!=0) {
-				ArrayList<obstacle> ListOfObstaclesRoute = getObstaclesRoute(routes[i].getOrientation());
-			}
-		}
-}
-*/
 
 
 

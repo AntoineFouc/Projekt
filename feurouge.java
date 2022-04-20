@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.util.*;
 
 public class feurouge extends obstacle implements Comparable<obstacle>{
-    
     protected Road voiebloq;
     protected int temps;
     private int timer;
@@ -35,7 +34,19 @@ public class feurouge extends obstacle implements Comparable<obstacle>{
 }
 	}
     
-    public int getTimer(){
+    
+    
+   
+
+	public int getEtat() {
+		return etat;
+	}
+
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+
+	public int getTimer(){
         int time=timer;
         return time;
     }

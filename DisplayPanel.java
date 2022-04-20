@@ -98,11 +98,8 @@ public class DisplayPanel extends JPanel implements ActionListener{
 			frame.vehicules.add(newCar);
 			frame.vehiculesParRoute.get((int) r.getOrientation()/90).addFirst(newCar);
 			if(frame.vehiculesParRoute.get(r.getOrientation()/90).size()>1){
-				
 				newCar.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation()/90).get(1));
 			}else{newCar.setNextVehicule(null);}
-			
-			
 			if(frame.sortObstaclesRoute(r.getOrientation()).size() !=0) {
 				newCar.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
