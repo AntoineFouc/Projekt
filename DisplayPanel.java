@@ -33,7 +33,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
         	if(time!=0) c.move(dt);
         	c.draw(g);
         }
-        for(obstacle o : frame.allObstacles){
+        for(obstacle o : frame.obstacles){
             if(!o.equals(null)){
                 o.draw(g);
             }
@@ -79,7 +79,7 @@ public class DisplayPanel extends JPanel implements ActionListener{
 	        	}
 	        }
             
-            for(obstacle o : frame.allObstacles){
+            for(obstacle o : frame.obstacles){
                 if(o instanceof feurouge){
                     ((feurouge)o).setTimer(((feurouge)o).getTimer()+1);
                     ((feurouge)o).update(time);
@@ -91,17 +91,10 @@ public class DisplayPanel extends JPanel implements ActionListener{
     
 	public void addVehicle(Road r){
 		if(Math.random()<0.9){
-			Vehicule newCar = new Car(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005);
-			frame.vehicules.add(newCar);
-			if(frame.getObstaclesRoute(r.getOrientation()).size() !=0) {
-				newCar.setNextObstacle(frame.getObstaclesRoute(r.getOrientation()).get(0));
-			}
+			frame.vehicules.add(new Car(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005));
 		}else{
-			Truck newTruck = new Truck(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005);
-			frame.vehicules.add(newTruck);
-			if(frame.getObstaclesRoute(r.getOrientation()).size() !=0) {
-				newTruck.setNextObstacle(frame.getObstaclesRoute(r.getOrientation()).get(0));
-			}
+			frame.vehicules.add(new Truck(r, 0.2+Math.random()*frame.getRapidite()*0.001, 0.0015+Math.random()*frame.getAggressivite()*0.000005));
 		}
+
 	}
 }

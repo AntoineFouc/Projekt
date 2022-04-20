@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class limitation extends obstacle implements Comparable<obstacle>{
+public class limitation extends obstacle{
     
     protected Road voiebloq;
     protected int valeur;
