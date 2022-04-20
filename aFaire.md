@@ -33,7 +33,9 @@ fait :
 Branche Interaction pas ouf :
 fait :
 - des get un peu partout
-- des changement dans les méthodes de véhicules ( méthode accel, desaccel, stop at à préciser encore)
+- des changements dans les méthodes de véhicules ( méthode accel, desaccel, stop at à préciser encore)
 - l'ajout d'un tableau croisement (pour avoir la position des croisements propre a une route croisement[0]=370 et croisement[1]=430) 
-- un début de méthode interaction (le concept est de stopper tt les véhicules à une position précise, la position de l'obstacle ou du croisement avant, 
-chaque véhicule ayant une position de sécurité dépendant de la vitesse pas besoin de faire plus si il n'ya qu'un seul obstacle par voie, si plusieurs faire une double boucle for each, le mais de cette technique c'est qu'on risque d'être limité dans le cas des priorittés de ce que je comprends)
+- un début de méthode interaction 
+(le concept est de stopper tt les véhicules à une position précise, la position de l'obstacle ou du croisement avant, 
+chaque véhicule ayant une position de sécurité dépendant de la vitesse pas besoin de faire plus les véhicules s'arrêtent d'eux même avec une distance plus faible que lorsqu'ils sont en mouvement, technique qui fonctionne si il n'ya qu'un seul obstacle par voie, si plusieurs faire une double boucle for each avec comparaison des o.getPosition. 
+Le mais de cette technique c'est qu'on risque d'être limité dans le cas des priorités puisqu'on ne traite pas les voitures de manière individuelle. il faut qu'on ait une discussion là dessus, pour savoir si on se contente de ça ou non parce que la priorité à droite j'ai tenté avec des cones de vision et une detection au croisement qui calcule en fonction de la vitesse de chaqun des deux véhicules si il y a contact ou non et qui réduit la vitesse du véhicule non prioritaire suffisament pour que celui ci passe sans contact mais snif ça marche pas. je sais pas pourquoi) 
