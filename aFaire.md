@@ -35,4 +35,5 @@ fait :
 - des get un peu partout
 - des changement dans les méthodes de véhicules ( méthode accel, desaccel, stop at à préciser encore)
 - l'ajout d'un tableau croisement (pour avoir la position des croisements propre a une route croisement[0]=370 et croisement[1]=430) 
-- un début de méthode interaction 
+- un début de méthode interaction (le concept est de stopper tt les véhicules à une position précise, la position de l'obstacle ou du croisement avant, 
+chaque véhicule ayant une position de sécurité dépendant de la vitesse pas besoin de faire plus si il n'ya qu'un seul obstacle par voie, si plusieurs faire une double boucle for each, le mais de cette technique c'est qu'on risque d'être limité dans le cas des priorittés de ce que je comprends)
