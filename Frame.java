@@ -550,8 +550,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
                 }
                 if (o instanceof barriere ){
                     if(v1.getRoad()==o.getRoad()){
-                        if(o.getPosition()>o.getRoad().getCroisement()[1]){
-                            v1.stopAt(o.getRoad().getCroisement()[1]-v1.getSize()[0]*2.0);
+                        if(o.getPosition()>o.getRoad().getCroisement()[0]){
+                            v1.stopAt(o.getRoad().getCroisement()[0]-v1.getSize()[0]*2.0);
                         }else{
                             v1.stopAt(o.getPosition()-v1.getSize()[0]*2.0);
                         }
