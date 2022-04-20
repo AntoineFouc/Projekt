@@ -14,8 +14,6 @@ public abstract class Vehicule {
 	protected double speed;						// en pixel par ms
 	protected double maxAccel;
 	protected double accel;						// acceleration
-	protected obstacle nextObstacle;
-	protected Vehicule nextVehicule;
 
 	protected int safeDistance;					// cte pour le moment
 	protected int[] size = new int[2];			// taille longueur puis largeur
@@ -55,11 +53,8 @@ public abstract class Vehicule {
 	}
 
 	public void deccelTo(double v){
-		if(speed < v){
-			accel = 0;
-		}else{
-			accel = - maxAccel;
-		}
+        speed=v;
+        accel=0;
 	}
 
 	public void noAccel(){
@@ -136,21 +131,19 @@ public abstract class Vehicule {
 		picture = i;
 	}
 
-	public obstacle getNextObstacle() {
-		return nextObstacle;
-	}
-
-	public void setNextObstacle(obstacle nextObstacle) {
-		this.nextObstacle = nextObstacle;
-	}
-
 	public void setSafeDistance(){
-		safeDistance = 50;
+		safeDistance = 30 +(int)speed*2; // 1 sec de réaction + 1 sec de freinage 
+	}
+    public int getSafeDistance(){
+		return safeDistance;
 	}
 
 	public int getSafePosition(){
 		return (int) getBack() - safeDistance;
 	}
+    public int getVision(){
+        return (int) getFront() + safeDistance;
+    }
 
 	public int getFront(){
 		return (int) position + size[0]/2;

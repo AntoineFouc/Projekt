@@ -2,71 +2,40 @@ import java.awt.*;
 import javax.swing.*;
 import java.util.*;
 
-public abstract class obstacle implements Comparable<obstacle>{
+public abstract class obstacle{
 
     protected int x;
     protected int y;
     protected Road road;
     protected double position;
+    protected int valeur;
+    protected int etat;
     public ArrayList<obstacle> obstacles;
     
     public obstacle(int uneposx,int uneposy, Road route){
         x=uneposx;
         y=uneposy;
         road=route;
-        
     }
     
     public void draw(Graphics g){
-	}
-
+    }
+    public void setObstacles(ArrayList<obstacle> o){
+	obstacles = o;
+    }
     public double getPosition(){
         position=(x-road.getStartingPoint()[0])*Math.cos(road.getOrientation()*Math.PI/180)+(road.getStartingPoint()[1]-y)*Math.sin(road.getOrientation()*Math.PI/180);
 	return position;
     }
-    
-
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public Road getRoad() {
-		return road;
-	}
-
-	public void setRoad(Road road) {
-		this.road = road;
-	}
-
-	public ArrayList<obstacle> getObstacles() {
-		return obstacles;
-	}
-	
-    public void setObstacles(ArrayList<obstacle> o){
-		obstacles = o;
-	}
-    
-    public int compareTo(obstacle obs){
-        int res;
-        if(this.getPosition()>obs.getPosition()){
-            res=1;
-        } else if (this.getPosition()==obs.getPosition()){
-            res=0;
-        } else {
-            res=-1;
-        }
-        return res;
+    public Road getRoad(){
+	return road;
     }
+    public int getLimite(){
+        int limite=valeur;
+        return limite;
+    }
+    public int getEtat(){
+        return etat;
+    }
+	
 }

@@ -1,13 +1,12 @@
 import java.awt.*;
 import javax.swing.*;
-import java.util.*;
 
-public class feurouge extends obstacle implements Comparable<obstacle>{
+public class feurouge extends obstacle{
     
     protected Road voiebloq;
     protected int temps;
     private int timer;
-    private int etat;
+    protected int etat;
     
     public feurouge(int uneposx,int uneposy,Road unevoiebloq,int untemps){
         super(uneposx,uneposy,unevoiebloq);
@@ -55,5 +54,8 @@ public class feurouge extends obstacle implements Comparable<obstacle>{
             }
             timer=0;
         }
+    }
+    public int getEtat(){
+        return etat;
     }
 }
