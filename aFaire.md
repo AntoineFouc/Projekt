@@ -29,3 +29,10 @@ fait :
 - chaque véhicule met à jour le prochain obstacle quand il le passe, et connait la voiture suivante (nouveaux attributs nextVehicule et nextObstacle)
 - chaque route a sa linkedlist de véhicules qui lui permet d'avoir les véhicules dans l'ordre
 - nouvelle méthode pour mettre en ordre les obstacles sur une route donnée
+
+Branche Interaction pas ouf :
+fait :
+- des get un peu partout
+- des changement dans les méthodes de véhicules ( méthode accel, desaccel, stop at à préciser encore)
+- l'ajout d'un tableau croisement (pour avoir la position des croisements propre a une route croisement[0]=370 et croisement[1]=430) 
+- un début de méthode interaction 
