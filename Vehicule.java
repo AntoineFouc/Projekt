@@ -60,11 +60,8 @@ public abstract class Vehicule implements Comparable<Vehicule>{
 	}
 
 	public void deccelTo(double v){
-		if(speed < v){
-			accel = 0;
-		}else{
-			accel = - maxAccel;
-		}
+        speed=v;
+        accel=0;
 	}
 
 	public void noAccel(){
@@ -150,12 +147,18 @@ public abstract class Vehicule implements Comparable<Vehicule>{
 	}
 
 	public void setSafeDistance(){
-		safeDistance = 50;
+		safeDistance = 30 +(int)speed*2; // 1 sec de réaction + 1 sec de freinage 
+	}
+    public int getSafeDistance(){
+		return safeDistance;
 	}
 
 	public int getSafePosition(){
 		return (int) getBack() - safeDistance;
 	}
+    public int getVision(){
+        return (int) getFront() + safeDistance;
+    }
 
 	public int getFront(){
 		return (int) position + size[0]/2;

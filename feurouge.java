@@ -36,8 +36,6 @@ public class feurouge extends obstacle implements Comparable<obstacle>{
     
     
     
-   
-
 	public int getEtat() {
 		return etat;
 	}
