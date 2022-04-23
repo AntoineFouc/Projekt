@@ -642,6 +642,11 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 				v.accel();
 				break;
 			}
+			for (Vehicule v1 : vehicules){
+                		if (!v.equals(v1) && v.getRoad()==v1.getRoad() && v.getPosition()<v1.getPosition() && v1.getSafePosition()<v.getFront()){
+                   			 v.deccelTo(v1.getSpeed());
+                		}
+            		}
 		}
 
 	}
