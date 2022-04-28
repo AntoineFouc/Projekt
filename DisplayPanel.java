@@ -100,8 +100,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
 			} else {
 				newCar.setNextVehicule(null);
 			}
-			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-				newCar.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+			if (frame.sortObstaclesRoute(r).size() != 0) {
+				newCar.setNextObstacle(frame.sortObstaclesRoute(r).get(0));
 			}
 		} else {
 			Truck newTruck = new Truck(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
@@ -114,8 +114,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
 				newTruck.setNextVehicule(null);
 			}
 
-			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-				newTruck.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+			if (frame.sortObstaclesRoute(r).size() != 0) {
+				newTruck.setNextObstacle(frame.sortObstaclesRoute(r).get(0));
 			}
 
 		}
