@@ -499,10 +499,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	// méthode de classement des obstacles sur une route (retourne une arraylist
 	// d'obstacles DANS l'ORDRE et uniquement constituée des obstacles de la route
-	public ArrayList<obstacle> sortObstaclesRoute(int RoadOrientation) {
+	public ArrayList<obstacle> sortObstaclesRoute(Road r) {
 		ArrayList<obstacle> thisRouteObstacles = new ArrayList<>();
 		for (obstacle Obs : allObstacles) {
-			if (Obs.getRoad().getOrientation() == RoadOrientation) {
+			if (Obs.getRoad().equals(r)) {
 				thisRouteObstacles.add(Obs);
 			}
 		}
@@ -512,7 +512,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	// détermine quel est le prochain obstacles quand une voiture le dépasse
 	public obstacle chercheNextObstacle(Road route, Vehicule v, int compteur) {
-		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(route.getOrientation());
+		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(route);
 		int i = 0;
 
 		while (listOfObstacles.get(i).getPosition() < v.getFront()
@@ -529,7 +529,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	// détermine si il existe un obstacle sur la route devant le véhicule après en
 	// avoir dépassé un
 	public boolean isAnObstacle(Road route, int compteur) {
-		if (sortObstaclesRoute(route.getOrientation()).size() - compteur == 0) {
+		if (sortObstaclesRoute(route).size() - compteur == 0) {
 			return false;
 		} else {
 			return true;
