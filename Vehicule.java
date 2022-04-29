@@ -17,7 +17,8 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	protected int prio = 0;
 	protected Vehicule nextVehicule;
 	protected int ObstaclesCompteur;
-
+	protected double stopStartTime;
+	protected boolean testStop = false;
 	protected int safeDistance; // cte pour le moment
 	protected int[] size = new int[2]; // taille longueur puis largeur
 	protected Road road; // on assigne a une route a un vehicule
@@ -33,8 +34,8 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 
 	// Permet de changer la position du vehicule en fonction du temps
 	public void move(int dt) {
-		if (speed < 0) {
-			speed = 0;
+		if (speed < 0.03 && accel<0) {
+			speed = 0.000;
 		}
 		speed += dt * accel;
 		position += dt * speed;
@@ -150,7 +151,7 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public void setSafeDistance() {
-		safeDistance = 30 + (int) speed * 2; // 1 sec de réaction + 1 sec de freinage
+			safeDistance = size[0]*2 + (int) speed * 2; // 1 sec de réaction + 1 sec de freinage
 	}
 
 	public int getSafeDistance() {
@@ -203,6 +204,22 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 
 	public void setMaxSpeed(double maxSpeed) {
 		this.maxSpeed = maxSpeed;
+	}
+
+	public double getStopStartTime() {
+		return stopStartTime;
+	}
+
+	public void setStopStartTime(double stopStartTime) {
+		this.stopStartTime = stopStartTime;
+	}
+
+	public boolean isTestStop() {
+		return testStop;
+	}
+
+	public void setTestStop(boolean testStop) {
+		this.testStop = testStop;
 	}
 
 	public Rectangle getRectangle() {

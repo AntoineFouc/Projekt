@@ -13,6 +13,7 @@ public class feurouge extends obstacle implements Comparable<obstacle> {
 		temps = untemps;
 		timer = 0;
 		etat = 0;
+		number = 2;
 	}
 
 	public void draw(Graphics g) {

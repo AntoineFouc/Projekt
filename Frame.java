@@ -499,10 +499,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	// méthode de classement des obstacles sur une route (retourne une arraylist
 	// d'obstacles DANS l'ORDRE et uniquement constituée des obstacles de la route
-	public ArrayList<obstacle> sortObstaclesRoute(Road r) {
+	public ArrayList<obstacle> sortObstaclesRoute(int RoadOrientation) {
 		ArrayList<obstacle> thisRouteObstacles = new ArrayList<>();
 		for (obstacle Obs : allObstacles) {
-			if (Obs.getRoad().equals(r)) {
+			if (Obs.getRoad().getOrientation() == RoadOrientation) {
 				thisRouteObstacles.add(Obs);
 			}
 		}
@@ -511,12 +511,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	}
 
 	// détermine quel est le prochain obstacles quand une voiture le dépasse
-	public obstacle chercheNextObstacle(Road route, Vehicule v, int compteur) {
-		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(route);
+	public obstacle chercheNextObstacle(Vehicule v) {
+		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(v.getRoad().getOrientation());
 		int i = 0;
-
-		while (listOfObstacles.get(i).getPosition() < v.getFront()
-				&& listOfObstacles.size() - v.getObstaclesCompteur() > i) {
+		while (listOfObstacles.get(i).getPosition() < v.getFront() && listOfObstacles.size() - v.getObstaclesCompteur() > i) {
 			i++;
 		}
 		if (i == 0) {
@@ -529,7 +527,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	// détermine si il existe un obstacle sur la route devant le véhicule après en
 	// avoir dépassé un
 	public boolean isAnObstacle(Road route, int compteur) {
-		if (sortObstaclesRoute(route).size() - compteur == 0) {
+		if (sortObstaclesRoute(route.getOrientation()).size() - compteur == 0) {
 			return false;
 		} else {
 			return true;
@@ -541,10 +539,11 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		for (Vehicule v : vehicules) {
 			if (v.getNextObstacle() != null) {
 				if (v.getNextObstacle().getPosition() < v.getFront()) {
+					v.setTestStop(false);
 					v.setNextObstacle(null);
 					v.setObstaclesCompteur(v.getObstaclesCompteur() + 1);
 					if (isAnObstacle(v.getRoad(), v.getObstaclesCompteur())) {
-						v.setNextObstacle(chercheNextObstacle(v.getRoad(), v, v.getObstaclesCompteur()));
+						v.setNextObstacle(chercheNextObstacle(v));
 					}
 				}
 			}
@@ -553,47 +552,40 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	// définit les priorités (obstacle, voiture devant...)
 	/*
-	 * NOTE DEF PRIO 0 : default 1 : voiture 2 : feu rouge 3 : barrière 4 :
-	 * limitation de vitesse 5 : stop
+	 * NOTE DEF PRIO 
+	 * 0 : default 
+	 * 1 : voiture 
+	 * 2 : feu rouge 
+	 * 3 : barrière 
+	 * 4 : limitation de vitesse 
+	 * 5 : stop
 	 */
 	public void definePrio() {
 		for (LinkedList<Vehicule> maRoute : vehiculesParRoute) {
 			for (int i = 0; i < maRoute.size(); i++) {
-				maRoute.get(i).setPrio(0);
-				// si c'est la première voiture (pas de voiture suivante) et qu'il y a un
-				// obstacle en face
-				if (maRoute.get(i).getNextVehicule() != null && maRoute.get(i).getNextObstacle() == null) {
-					maRoute.get(i).setPrio(1);
-				}else if (maRoute.get(i).getNextVehicule() == null && maRoute.get(i).getNextObstacle() != null) {
-					// check quel obstacle est en face, et met la prio entre 2 et 5 selon l'obstacle
-					if (maRoute.get(i).getNextObstacle() instanceof feurouge) {
-						maRoute.get(i).setPrio(2);
-					} else if (maRoute.get(i).getNextObstacle() instanceof barriere) {
-						maRoute.get(i).setPrio(3);
-					} else if (maRoute.get(i).getNextObstacle() instanceof limitation) {
-						maRoute.get(i).setPrio(4);
-					} else if (maRoute.get(i).getNextObstacle() instanceof stop) {
-						maRoute.get(i).setPrio(5);
-					}
-				} else if (maRoute.get(i).getNextVehicule() != null && maRoute.get(i).getNextObstacle() != null) {
-					// vérifie qui est le plus proche, de l'obstacle ou de la voiture en face
-					if (maRoute.get(i + 1).getBack() < maRoute.get(i).getNextObstacle().getPosition()) {
-						// la voiture est plus proche, le véhicule se met en prio 1
-						maRoute.get(i).setPrio(1);
-					} else {
-						// l'obstacle est plus proche, la voiture se met en prio 2 à 5
-						if (maRoute.get(i).getNextObstacle() instanceof feurouge) {
-							maRoute.get(i).setPrio(2);
-						} else if (maRoute.get(i).getNextObstacle() instanceof barriere) {
-							maRoute.get(i).setPrio(3);
-						} else if (maRoute.get(i).getNextObstacle() instanceof limitation) {
-							maRoute.get(i).setPrio(4);
-						} else if (maRoute.get(i).getNextObstacle() instanceof stop) {
-							maRoute.get(i).setPrio(5);
-						}
-					}
+				Vehicule v = maRoute.get(i);
+				if(v.getPrio()==6) {
+					break;
 				}
-			}
+				v.setPrio(0);
+				// la voiture i a une suivante et pas d'obstacle en face
+				if (v.getNextVehicule() != null && v.getNextObstacle() == null) {
+					v.setPrio(1);
+				// la voiture i est la première de la file et a un obstacle en face
+				}else if(v.getNextVehicule() == null && v.getNextObstacle() != null) {
+					v.setPrio(v.getNextObstacle().getNumber());
+				// la voiture i a une suivante et a un obstacle en face
+				}else if(v.getNextVehicule() != null && v.getNextObstacle() != null) {
+					if(maRoute.get(i+1).getNextObstacle() == null || maRoute.get(i+1).getNextObstacle() != v.getNextObstacle()) {
+						v.setPrio(v.getNextObstacle().getNumber());
+					}else {
+						v.setPrio(1);
+					}
+				// la voiture i n'a ni suivante ni obstacle en face
+				}else {
+					v.setPrio(0);
+				}
+			}				
 		}
 	}
 
@@ -606,39 +598,70 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		definePrio();
 		for (Vehicule v : vehicules) {
 			switch (v.getPrio()) {
+			// cas voiture
 			case 1:
-				v.deccelTo(v.getNextVehicule().getSpeed());
+				if(v.getNextVehicule().getSafePosition()<v.getPosition()) {
+					v.deccelTo(v.getNextVehicule().getSpeed());
+				}else {
+					v.accel();
+				}
 				break;
+			// cas feu rouge
 			case 2:
-				if (v.getRoad() == v.getNextObstacle().getRoad()
-						&& v.getPosition() < v.getNextObstacle().getPosition()) {
-					if (((feurouge) v.getNextObstacle()).getEtat() == 1
-							|| ((feurouge) v.getNextObstacle()).getEtat() == 2) {
-						v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[0]);
+				if (((feurouge) v.getNextObstacle()).getEtat() == 1
+						|| ((feurouge) v.getNextObstacle()).getEtat() == 2) {
+					v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[0]/2);
+				} else {
+					if(v.getNextVehicule()!=null) {
+						v.deccelTo(v.getNextVehicule().getSpeed());
 					} else {
 						v.accel();
 					}
 				}
 				break;
+			// cas barrière
 			case 3:
-				if (v.getRoad() == v.getNextObstacle().getRoad()) {
-					if (v.getNextObstacle().getPosition() > v.getNextObstacle().getRoad().getCroisement()[0]) {
-						v.stopAt(v.getNextObstacle().getRoad().getCroisement()[0] - v.getSize()[0] * 2.0);
-					} else {
-						v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[1]);
+				if (v.getNextObstacle().getPosition() > v.getNextObstacle().getRoad().getCroisement()[0]) {
+					v.stopAt(v.getNextObstacle().getRoad().getCroisement()[0] - v.getSize()[0]);
+				} else {
+					v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[1]);
+				}
+				break;
+			// cas limitation de vitesse
+			case 4:
+				if (v.getSpeed() > ((limitation) v.getNextObstacle()).getLimite() / 10) {
+					v.deccelTo(((limitation) v.getNextObstacle()).getLimite() / 10);
+					v.setMaxSpeed(((limitation) v.getNextObstacle()).getLimite() / 10);
+				}
+				break;
+			// cas stop
+			case 5:
+				// Le véhicule a un stop face à lui : s'il est assez proche, il passe en prio 6, et active le marqueur "teststop"
+				v.setStopStartTime(getElapsed());
+				if(v.getNextVehicule()!=null) {
+					if(v.getFront()>v.getNextObstacle().getPosition()-((double)v.getNextVehicule().getSize()[1]) && !v.isTestStop()) {
+						v.setPrio(6);
+						v.setTestStop(true);
+						break;
+					}
+				}else {
+					if(v.getFront()>v.getNextObstacle().getPosition()-((double)v.getSize()[1]) && !v.isTestStop()) {
+						v.setPrio(6);
+						v.setTestStop(true);
+						break;
 					}
 				}
+				v.accel();
 				break;
-			case 4:
-				if (v.getSpeed() > ((limitation) v.getNextObstacle()).getLimite()/10) {
-					v.deccelTo(((limitation) v.getNextObstacle()).getLimite()/10);
-					v.setMaxSpeed(((limitation)v.getNextObstacle()).getLimite()/10);
-				}
-				break;
-			case 5:
-				if (v.getRoad() == v.getNextObstacle().getRoad()) {
-					v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[0] / 2);
-				}
+			case 6:		
+				//si le temps passé au stop est <3sec, il s'arrête au stop. Sinon il accélère et continue son chemin
+					if(getElapsed()-v.getStopStartTime()<3000 && v.isTestStop()) {
+						v.stopAt(v.getNextObstacle().getPosition()-v.getSize()[0]/2);
+					}else {
+						v.accel();
+						v.setStopStartTime(0);
+						v.setPrio(0);
+					}
 				break;
 			default:
 				v.accel();

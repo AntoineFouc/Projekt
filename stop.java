@@ -7,6 +7,7 @@ public class stop extends obstacle implements Comparable<obstacle> {
 	public stop(int uneposx, int uneposy, Road unevoiebloq) {
 		super(uneposx, uneposy, unevoiebloq);
 		voiebloq = unevoiebloq;
+		number = 5;
 	}
 
 	public void draw(Graphics g) {

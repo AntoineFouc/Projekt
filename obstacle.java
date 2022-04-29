@@ -9,12 +9,21 @@ public abstract class obstacle implements Comparable<obstacle> {
 	protected Road road;
 	protected double position;
 	public ArrayList<obstacle> obstacles;
+	protected int number;
 
 	public obstacle(int uneposx, int uneposy, Road route) {
 		x = uneposx;
 		y = uneposy;
 		road = route;
 
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public void draw(Graphics g) {

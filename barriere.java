@@ -11,9 +11,9 @@ import javax.swing.ImageIcon;
 
 public class barriere extends obstacle implements Comparable<obstacle> {
 	protected Road voiebloq;
-
 	public barriere(int uneposx, int uneposy, Road unevoiebloq) {
 		super(uneposx, uneposy, unevoiebloq);
+		number = 3;
 	}
 
 	public void draw(Graphics g) {

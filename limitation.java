@@ -8,6 +8,7 @@ public class limitation extends obstacle implements Comparable<obstacle> {
 	public limitation(int uneposx, int uneposy, Road unevoiebloq, int unevaleur) {
 		super(uneposx, uneposy, unevoiebloq);
 		valeur = unevaleur;
+		number = 4;
 	}
 
 	public void draw(Graphics g) {
