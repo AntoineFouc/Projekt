@@ -600,7 +600,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			switch (v.getPrio()) {
 			// cas voiture
 			case 1:
-				if(v.getNextVehicule().getSafePosition()<v.getPosition()) {
+				if(v.getNextVehicule().getSafePosition()<v.getFront()) {
 					v.deccelTo(v.getNextVehicule().getSpeed());
 				}else {
 					v.accel();
