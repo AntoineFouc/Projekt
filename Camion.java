@@ -1,13 +1,13 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class Moto extends Vehicule {
+public class Camion extends Vehicule {
 
-	public Moto(Route r, double s, double a) {
+	public Camion(Route r, double s, double a) {
 		super(r, s, a);
-		size[0] = 43; // taille des motos : longueur
+		size[0] = 141; // taille des camions : longueur
 		size[1] = 20; // largeur
-		String pictureName = "Images/moto-" + Integer.toString(Route.getOrientation()) + ".png";
+		String pictureName = "Images/truck-" + Integer.toString(Route.getOrientation()) + ".png";
 		picture = new ImageIcon(pictureName);
 		position = -size[0] / 2;
 	}

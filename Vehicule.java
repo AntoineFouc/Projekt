@@ -9,11 +9,11 @@ Vitesse reelle : 1 px/ms = 600 km/h
 
 public abstract class Vehicule implements Comparable<Vehicule> {
 	protected double position;
-	protected double maxSpeed;
+	protected double vitesseMax;
 	protected double speed; // en pixel par ms
 	protected double maxAccel;
 	protected double accel; // acceleration
-	protected obstacle nextObstacle;
+	protected Obstacle nextObstacle;
 	protected int prio = 0;
 	protected Vehicule nextVehicule;
 	protected int ObstaclesCompteur;
@@ -21,15 +21,15 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	protected boolean testStop = false;
 	protected int safeDistance; // cte pour le moment
 	protected int[] size = new int[2]; // taille longueur puis largeur
-	protected Road road; // on assigne a une route a un vehicule
+	protected Route Route; // on assigne a une route a un vehicule
 	protected ImageIcon picture;
 
-	public Vehicule(Road r, double s, double a) {
+	public Vehicule(Route r, double s, double a) {
 		speed = s; // vitesse initiale
-		maxSpeed = s;
+		vitesseMax = s;
 		maxAccel = a;
 		accel = 0;
-		road = r;
+		Route = r;
 	}
 
 	// Permet de changer la position du vehicule en fonction du temps
@@ -43,8 +43,8 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public void accel() {
-		if (speed > maxSpeed) {
-			speed = maxSpeed;
+		if (speed > vitesseMax) {
+			speed = vitesseMax;
 			accel = 0;
 		} else {
 			accel = maxAccel;
@@ -72,34 +72,34 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 
-		switch (road.getOrientation()) {
+		switch (Route.getOrientation()) {
 		case 0:
-			g2d.drawImage(picture.getImage(), (int) (road.getStartingPoint()[0] + (int) position - size[0] / 2.0),
-					(int) (road.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
+			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] + (int) position - size[0] / 2.0),
+					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
 			break;
 		case 90:
-			g2d.drawImage(picture.getImage(), (int) (road.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (road.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0], null);
+			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (Route.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0], null);
 			break;
 		case 180:
-			g2d.drawImage(picture.getImage(), (int) (road.getStartingPoint()[0] - (int) position - size[0] / 2.0),
-					(int) (road.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
+			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] - (int) position - size[0] / 2.0),
+					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
 			break;
 		case 270:
-			g2d.drawImage(picture.getImage(), (int) (road.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (road.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0], null);
+			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (Route.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0], null);
 			break;
 		}
 	}
 
 	// renvoie false si le vamex a depasse le point d arrivee de la route (sers a
 	// faire repartir le véhicule au point de depart)
-	public boolean isOnTheRoad() {
+	public boolean isOnTheRoute() {
 		return position < 800 + size[0] / 2; // ou plutôt "longueur de la route" pour pouvoir adapter
 	}
 
 	public boolean equals(Vehicule v) {
-		return (v.getPosition() == position && road.equals(v.getRoad()));
+		return (v.getPosition() == position && Route.equals(v.getRoute()));
 	}
 
 	public double getPosition() {
@@ -134,19 +134,19 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 		return size;
 	}
 
-	public Road getRoad() {
-		return road;
+	public Route getRoute() {
+		return Route;
 	}
 
 	public void setPicture(ImageIcon i) {
 		picture = i;
 	}
 
-	public obstacle getNextObstacle() {
+	public Obstacle getNextObstacle() {
 		return nextObstacle;
 	}
 
-	public void setNextObstacle(obstacle nextObstacle) {
+	public void setNextObstacle(Obstacle nextObstacle) {
 		this.nextObstacle = nextObstacle;
 	}
 
@@ -198,12 +198,12 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 		this.nextVehicule = nextVehicule;
 	}
 
-	public double getMaxSpeed() {
-		return maxSpeed;
+	public double getVitesseMax() {
+		return vitesseMax;
 	}
 
-	public void setMaxSpeed(double maxSpeed) {
-		this.maxSpeed = maxSpeed;
+	public void setVitesseMax(double vitesseMax) {
+		this.vitesseMax = vitesseMax;
 	}
 
 	public double getStopStartTime() {
@@ -224,22 +224,22 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 
 	public Rectangle getRectangle() {
 		Rectangle r = new Rectangle();
-		switch (road.getOrientation()) {
+		switch (Route.getOrientation()) {
 		case 0:
-			r = new Rectangle((int) (road.getStartingPoint()[0] + (int) position - size[0] / 2.0),
-					(int) (road.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
+			r = new Rectangle((int) (Route.getStartingPoint()[0] + (int) position - size[0] / 2.0),
+					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
 			break;
 		case 90:
-			r = new Rectangle((int) (road.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (road.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0]);
+			r = new Rectangle((int) (Route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (Route.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0]);
 			break;
 		case 180:
-			r = new Rectangle((int) (road.getStartingPoint()[0] - (int) position - size[0] / 2.0),
-					(int) (road.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
+			r = new Rectangle((int) (Route.getStartingPoint()[0] - (int) position - size[0] / 2.0),
+					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
 			break;
 		case 270:
-			r = new Rectangle((int) (road.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (road.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0]);
+			r = new Rectangle((int) (Route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (Route.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0]);
 			break;
 		}
 		return r;

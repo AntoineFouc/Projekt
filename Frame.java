@@ -27,8 +27,8 @@ import javax.swing.JRadioButton;
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
 	// tableau d'objets route
-	public Road[] routes = { new Road(800, 370, 0, 370), new Road(0, 430, 800, 430), new Road(370, 0, 370, 800),
-			new Road(430, 800, 430, 0) };
+	public Route[] routes = { new Route(800, 370, 0, 370), new Route(0, 430, 800, 430), new Route(370, 0, 370, 800),
+			new Route(430, 800, 430, 0) };
 
 	// l'arraylist contient les routes, les linkedlist les véhicules par route
 	public ArrayList<LinkedList<Vehicule>> vehiculesParRoute = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	// arraylist contenant tous les véhicules
 	public ArrayList<Vehicule> vehicules = new ArrayList<>(); // liste des vehicules PRESENTS
 	// arraylist contenant tous les obstacles
-	public ArrayList<obstacle> allObstacles = new ArrayList<>(); // liste des obstacles PRESENTS
+	public ArrayList<Obstacle> obstacles = new ArrayList<>(); // liste des obstacles PRESENTS
 
 	boolean appuyé = false; // état de l'action clic souris
 	boolean select = false; // variable qqchose selectionné
@@ -51,7 +51,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private JButton pause; // pause
 	private JButton restart; // réinitialisation
 	private JButton trash; // delete obstacles
-	private JSlider traffic; // nombres de véhicules sur l'écran
+	private JSlider trafic; // nombres de véhicules sur l'écran
 	private JSlider rapidite; // vitesse moyenne des véhicules
 	private JSlider aggressivite; // agressivité des véhicules
 	private JLabel labelTime; // affichage du temps
@@ -62,7 +62,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private JButton boutonFeu;
 	private JTextField valeurFeu;
 	private int valfeu;
-	private double time;
+	//private double time;
     
     //checkbox feu rouge
     private JRadioButton cb1;
@@ -152,15 +152,15 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		restart.setVisible(true);
 
 		// curseur trafic
-		traffic = new JSlider(0, 100, 20);
-		traffic.setBounds(10, 10, 280, 50);
-		traffic.setMinorTickSpacing(5);
-		traffic.setMajorTickSpacing(20);
-		traffic.setPaintTicks(true);
-		traffic.setPaintLabels(true);
-		p2.add(traffic);
-		traffic.setVisible(false);
-		traffic.setVisible(true);
+		trafic = new JSlider(0, 100, 20);
+		trafic.setBounds(10, 10, 280, 50);
+		trafic.setMinorTickSpacing(5);
+		trafic.setMajorTickSpacing(20);
+		trafic.setPaintTicks(true);
+		trafic.setPaintLabels(true);
+		p2.add(trafic);
+		trafic.setVisible(false);
+		trafic.setVisible(true);
 
 		// curseur conduite rapide
 		rapidite = new JSlider(0, 100, 20);
@@ -348,11 +348,11 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		}
 
 		if (e.getSource() == trash) {
-			ArrayList<obstacle> supprimer = new ArrayList<>();
-			for (obstacle o : allObstacles) {
+			ArrayList<Obstacle> supprimer = new ArrayList<>();
+			for (Obstacle o : obstacles) {
 				supprimer.add(o);
 			}
-			allObstacles.removeAll(supprimer);
+			obstacles.removeAll(supprimer);
 			for (Vehicule v : vehicules) {
 				v.setNextObstacle(null);
 			}
@@ -370,10 +370,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (allObstacles.contains(e.getSource())) {
+		if (obstacles.contains(e.getSource())) {
 			if (SwingUtilities.isRightMouseButton(e)) {
 				// Supprimer l'obstacle
-				allObstacles.remove(e.getSource());
+				obstacles.remove(e.getSource());
 				p1.repaint();
 			}
 		} else if (SwingUtilities.isLeftMouseButton(e)) {
@@ -396,7 +396,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (appuyé) {
-			ajouterElement(quoi);
+			addElement(quoi);
 		}
 	}
 
@@ -416,28 +416,28 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			quoi = "stop";
 		} else if (select && quoi.equals("feurouge")) {
 			if (e.getSource() == p1 && SwingUtilities.isLeftMouseButton(e)) {
-				ajouterElement("feurouge");
+				addElement("feurouge");
 				select = false;
 			} else {
 				select = false;
 			}
 		} else if (select && quoi.equals("limitation")) {
 			if (e.getSource() == p1 && SwingUtilities.isLeftMouseButton(e)) {
-				ajouterElement("limitation");
+				addElement("limitation");
 				select = false;
 			} else {
 				select = false;
 			}
 		} else if (select && quoi.equals("barriere")) {
 			if (e.getSource() == p1 && SwingUtilities.isLeftMouseButton(e)) {
-				ajouterElement("barriere");
+				addElement("barriere");
 				select = false;
 			} else {
 				select = false;
 			}
 		} else if (select && quoi.equals("stop")) {
 			if (e.getSource() == p1 && SwingUtilities.isLeftMouseButton(e)) {
-				ajouterElement("stop");
+				addElement("stop");
 				select = false;
 			} else {
 				select = false;
@@ -475,7 +475,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public void keyTyped(KeyEvent e) {
 	}
 
-	public void ajouterElement(String valeur) {
+	public void addElement(String valeur) {
 		PointerInfo a = MouseInfo.getPointerInfo();
 		Point b = a.getLocation();
 		int x = (int) b.getX() - this.getLocationOnScreen().x;
@@ -490,8 +490,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 					} else {
 						valfeu = 0;
 					}
-					feurouge feu = new feurouge(x, y, routes[pos], valfeu, etat);
-					allObstacles.add(feu);
+					Obstacle feu = new FeuRouge(x, y, routes[pos], valfeu, etat);
+					obstacles.add(feu);
 					p1.repaint();
 				} else if (valeur.equals("limitation")) { // cas limitation
 					if (isInt(valeurLimite.getText())) {
@@ -499,16 +499,16 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 					} else {
 						vallim = 0;
 					}
-					limitation limite = new limitation(x, y, routes[pos], vallim);
-					allObstacles.add(limite);
+					Limitation limite = new Limitation(x, y, routes[pos], vallim);
+					obstacles.add(limite);
 					p1.repaint();
 				} else if (valeur.equals("barriere")) { // cas barriere
-					barriere bar = new barriere(x, y, routes[pos]);
-					allObstacles.add(bar);
+					Barriere bar = new Barriere(x, y, routes[pos]);
+					obstacles.add(bar);
 					p1.repaint();
 				} else if (valeur.equals("stop")) { // panneau stop
-					stop pstop = new stop(x, y, routes[pos]);
-					allObstacles.add(pstop);
+					Stop pstop = new Stop(x, y, routes[pos]);
+					obstacles.add(pstop);
 					p1.repaint();
 				}
 			}
@@ -516,25 +516,25 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	}
 
 	// retourne true, on sait pas pourquoi mais c'est là
-	public boolean checkPos(int x, int y, ArrayList<Road> routes) {
+	public boolean checkPos(int x, int y, ArrayList<Route> routes) {
 		boolean verif = true;
 		return verif;
 	}
 
 	// détermination du nombre de véhicules sur la route
-	public int howManyVehicles(Road r) {
+	public int howManyVehicles(Route r) {
 		int i = 0;
 		for (Vehicule v : vehicules) {
-			if (v.getRoad().equals(r))
+			if (v.getRoute().equals(r))
 				i++;
 		}
 		return i;
 	}
 
 	// évaluation de la possibilité de création de nouveau véhicule
-	public boolean newVehicle(Road r) {
+	public boolean newVehicle(Route r) {
 		for (Vehicule v : vehicules) {
-			if (v.getRoad().equals(r) && v.getSafePosition() < getTraffic())
+			if (v.getRoute().equals(r) && v.getSafePosition() < getTrafic())
 				return false;
 		}
 		return true;
@@ -553,10 +553,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	// méthode de classement des obstacles sur une route (retourne une arraylist
 	// d'obstacles DANS l'ORDRE et uniquement constituée des obstacles de la route
-	public ArrayList<obstacle> sortObstaclesRoute(int RoadOrientation) {
-		ArrayList<obstacle> thisRouteObstacles = new ArrayList<>();
-		for (obstacle Obs : allObstacles) {
-			if (Obs.getRoad().getOrientation() == RoadOrientation) {
+	public ArrayList<Obstacle> sortObstaclesRoute(int RouteOrientation) {
+		ArrayList<Obstacle> thisRouteObstacles = new ArrayList<>();
+		for (Obstacle Obs : obstacles) {
+			if (Obs.getRoute().getOrientation() == RouteOrientation) {
 				thisRouteObstacles.add(Obs);
 			}
 		}
@@ -565,8 +565,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	}
 
 	// détermine quel est le prochain obstacles quand une voiture le dépasse
-	public obstacle chercheNextObstacle(Vehicule v) {
-		ArrayList<obstacle> listOfObstacles = sortObstaclesRoute(v.getRoad().getOrientation());
+	public Obstacle searchNextObstacle(Vehicule v) {
+		ArrayList<Obstacle> listOfObstacles = sortObstaclesRoute(v.getRoute().getOrientation());
 		int i = 0;
 		while (listOfObstacles.get(i).getPosition() < v.getFront() && listOfObstacles.size() - v.getObstaclesCompteur() > i) {
 			i++;
@@ -580,7 +580,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	// détermine si il existe un obstacle sur la route devant le véhicule après en
 	// avoir dépassé un
-	public boolean isAnObstacle(Road route, int compteur) {
+	public boolean isAnObstacle(Route route, int compteur) {
 		if (sortObstaclesRoute(route.getOrientation()).size() - compteur == 0) {
 			return false;
 		} else {
@@ -589,15 +589,15 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	}
 
 	// met à jour le prochain obstacle sur la voiture (attribut nextObstacle)
-	public void majNextObstacle() {
+	public void updateNextObstacle() {
 		for (Vehicule v : vehicules) {
 			if (v.getNextObstacle() != null) {
 				if (v.getNextObstacle().getPosition() < v.getFront()) {
 					v.setTestStop(false);
 					v.setNextObstacle(null);
 					v.setObstaclesCompteur(v.getObstaclesCompteur() + 1);
-					if (isAnObstacle(v.getRoad(), v.getObstaclesCompteur())) {
-						v.setNextObstacle(chercheNextObstacle(v));
+					if (isAnObstacle(v.getRoute(), v.getObstaclesCompteur())) {
+						v.setNextObstacle(searchNextObstacle(v));
 					}
 				}
 			}
@@ -662,8 +662,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 				break;
 			// cas feu rouge
 			case 2:
-				if (((feurouge) v.getNextObstacle()).getEtat() == 1
-						|| ((feurouge) v.getNextObstacle()).getEtat() == 2) {
+				if (((FeuRouge) v.getNextObstacle()).getEtat() == 1
+						|| ((FeuRouge) v.getNextObstacle()).getEtat() == 2) {
 					v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[0]/2);
 				} else {
 					if(v.getNextVehicule()!=null) {
@@ -675,17 +675,17 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 				break;
 			// cas barrière
 			case 3:
-				if (v.getNextObstacle().getPosition() > v.getNextObstacle().getRoad().getCroisement()[0]) {
-					v.stopAt(v.getNextObstacle().getRoad().getCroisement()[0] - v.getSize()[0]);
+				if (v.getNextObstacle().getPosition() > v.getNextObstacle().getRoute().getCroisement()[0]) {
+					v.stopAt(v.getNextObstacle().getRoute().getCroisement()[0] - v.getSize()[0]);
 				} else {
 					v.stopAt(v.getNextObstacle().getPosition() - v.getSize()[1]);
 				}
 				break;
 			// cas limitation de vitesse
 			case 4:
-				if (v.getSpeed() > ((limitation) v.getNextObstacle()).getLimite() / 10) {
-					v.deccelTo(((limitation) v.getNextObstacle()).getLimite() / 10);
-					v.setMaxSpeed(((limitation) v.getNextObstacle()).getLimite() / 10);
+				if (v.getSpeed() > ((Limitation) v.getNextObstacle()).getLimite() / 10) {
+					v.deccelTo(((Limitation) v.getNextObstacle()).getLimite() / 10);
+					v.setVitesseMax(((Limitation) v.getNextObstacle()).getLimite() / 10);
 				}
 				break;
 			// cas stop
@@ -725,7 +725,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	}
 
-	public int getRoute(int x, int y, Road[] routes) {
+	public int getRoute(int x, int y, Route[] routes) {
 		int rep = -1;
 		int liste = 0;
 		for (int i = 0; i < routes.length; i++) {
@@ -765,8 +765,8 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		}
 	}
 
-	public int getTraffic() {
-		return traffic.getValue();
+	public int getTrafic() {
+		return trafic.getValue();
 	}
 
 	public int getRapidite() {
@@ -776,5 +776,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public int getAggressivite() {
 		return aggressivite.getValue();
 	}
+	
 
 }
