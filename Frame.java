@@ -49,10 +49,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private DisplayPanel p1;
 	private JButton start; // démarrage
 	private JButton pause; // pause
-	private JButton restart; // réinitialisation
+	public JButton restart; // réinitialisation, accessible en public, utilisé en cas d'accident
 	private JButton trash; // delete obstacles
 	private JSlider trafic; // nombres de véhicules sur l'écran
-	private JSlider rapidite; // vitesse moyenne des véhicules
 	private JSlider aggressivite; // agressivité des véhicules
 	private JLabel labelTime; // affichage du temps
 	boolean démarré;
@@ -161,17 +160,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(trafic);
 		trafic.setVisible(false);
 		trafic.setVisible(true);
-
-		// curseur conduite rapide
-		rapidite = new JSlider(0, 100, 20);
-		rapidite.setBounds(10, 70, 280, 50);
-		rapidite.setMinorTickSpacing(5);
-		rapidite.setMajorTickSpacing(20);
-		rapidite.setPaintTicks(true);
-		rapidite.setPaintLabels(true);
-		p2.add(rapidite);
-		rapidite.setVisible(false);
-		rapidite.setVisible(true);
 
 		// curseur aggressivite
 		aggressivite = new JSlider(0, 100, 20);
@@ -315,7 +303,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			start.setEnabled(false);
 			pause.setEnabled(true);
 			restart.setEnabled(true);
-			// init.setEnabled(false);
+			trash.setEnabled(false);
 			p1.getTimer().start(); // commence le chrono dans p1 (DisplayPanel) lorsqu'on appuie sur le bouton
 
 		}
@@ -327,14 +315,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			p1.getTimer().stop();
 			pause.setEnabled(false);
 			start.setEnabled(true);
-			// init.setEnabled(true);
 		}
 		if (e.getSource() == restart) {
 			elapsed = 0;
 			running = false;
 			pause.setEnabled(false);
 			restart.setEnabled(false);
-			// init.setEnabled(true);
+			trash.setEnabled(true);
 			vehicules.clear(); // A changer
             for (LinkedList<Vehicule> v : vehiculesParRoute) {
                 v.clear();
@@ -534,7 +521,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	// évaluation de la possibilité de création de nouveau véhicule
 	public boolean newVehicle(Route r) {
 		for (Vehicule v : vehicules) {
-			if (v.getRoute().equals(r) && v.getSafePosition() < getTrafic())
+			if (v.getRoute().equals(r) && v.getSafePosition() < (100-getTrafic())*2)
 				return false;
 		}
 		return true;
@@ -767,10 +754,6 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	public int getTrafic() {
 		return trafic.getValue();
-	}
-
-	public int getRapidite() {
-		return rapidite.getValue();
 	}
 
 	public int getAggressivite() {

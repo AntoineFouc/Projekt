@@ -52,12 +52,16 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == timer) {
+
+			if(frame.isAnAccident()) {
+				// frame.restart.doClick();
+			}
+
 			time += dt;
 
 			for (Route r : frame.routes) {
 				if (frame.howManyVehicles(r) == 0 || frame.newVehicle(r)) {
-					// frame.vehicules.add(new Voiture(r,0.3,0.002));
-					addVehicle(r);
+					if(Math.random()<(frame.getTrafic()*0.01 + 0.1)) addVehicle(r);
 				}
 			}
 			// frame.classementEntites();
@@ -81,9 +85,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	}
 	
 	public void addVehicle(Route r) {
-		if (Math.random() < 0.9) {
-			Vehicule newVoiture = new Voiture(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
-					0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
+		if (Math.random() < 0.85) {
+			Vehicule newVoiture = new Voiture(r, 0.13, 0.0015 + Math.random() * frame.getAggressivite() * 0.00005);
 			frame.vehicules.add(newVoiture);
 			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newVoiture);
 			if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
@@ -94,34 +97,30 @@ public class DisplayPanel extends JPanel implements ActionListener {
 			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
 				newVoiture.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
-		} else {
-			if (Math.random() > 0.3) {
-                		Camion newCamion = new Camion(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
-					0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
-                		frame.vehicules.add(newCamion);
-                		frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newCamion);
-                		if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
-                    			newCamion.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
-                		} else {
-                    			newCamion.setNextVehicule(null);
-                		}
-                		if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-                    			newCamion.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
-                		}
-				} else {
-                			Moto newMoto = new Moto(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
-						0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
-                			frame.vehicules.add(newMoto);
-                			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newMoto);
-               				if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
-                    				newMoto.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
-                			} else {
-                    				newMoto.setNextVehicule(null);
-                			}
-                			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-                    				newMoto.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
-                			}
-            			}
+		} else if (Math.random() < 0.86) {
+            Camion newCamion = new Camion(r, 0.09, 0.0015 + Math.random() * frame.getAggressivite() * 0.00005);
+           	frame.vehicules.add(newCamion);
+       		frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newCamion);
+       		if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
+           		newCamion.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
+           	} else {
+       			newCamion.setNextVehicule(null);
+      		}
+      		if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
+        		newCamion.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+          	}
+        } else {
+        	Moto newMoto = new Moto(r, 0.15, 0.0015 + Math.random() * frame.getAggressivite() * 0.00005);
+        	frame.vehicules.add(newMoto);
+            frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newMoto);
+            if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
+            		newMoto.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
+            } else {
+            		newMoto.setNextVehicule(null);
+            }
+            if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
+            	newMoto.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+            }
 		}
 	}
 
