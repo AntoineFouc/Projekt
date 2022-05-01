@@ -79,39 +79,53 @@ public class DisplayPanel extends JPanel implements ActionListener {
 			repaint();
 		}
 	}
-
-	public void addVehicle(Route r) {
+	
+	public void addVehicle(Road r) {
 		if (Math.random() < 0.9) {
-			Vehicule newVoiture = new Voiture(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
+			Vehicule newCar = new Car(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
 					0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
-			frame.vehicules.add(newVoiture);
-			frame.vehiculesParRoute.get(r.getOrientation() / 90).addFirst(newVoiture);
+			frame.vehicules.add(newCar);
+			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newCar);
 			if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
-				newVoiture.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
+				newCar.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
 			} else {
-				newVoiture.setNextVehicule(null);
+				newCar.setNextVehicule(null);
 			}
 			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-				newVoiture.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+				newCar.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
 		} else {
-			Camion newCamion = new Camion(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
+			if (Math.random() > 0.3) {
+                		Truck newTruck = new Truck(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
 					0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
-			frame.vehicules.add(newCamion);
-			frame.vehiculesParRoute.get(r.getOrientation() / 90).addFirst(newCamion);
-			if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
-				newCamion.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
-			} else {
-				newCamion.setNextVehicule(null);
-			}
-
-			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-				newCamion.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
-			}
-
+                		frame.vehicules.add(newTruck);
+                		frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newTruck);
+                		if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
+                    			newTruck.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
+                		} else {
+                    			newTruck.setNextVehicule(null);
+                		}
+                		if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
+                    			newTruck.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+                		}
+				} else {
+                			Moto newMoto = new Moto(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
+						0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
+                			frame.vehicules.add(newMoto);
+                			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newMoto);
+               				if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
+                    				newMoto.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
+                			} else {
+                    				newMoto.setNextVehicule(null);
+                			}
+                			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
+                    				newMoto.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+                			}
+            			}
 		}
 	}
 
+	
 	// getter & setters
 	public Timer getTimer() {
 		return timer;
