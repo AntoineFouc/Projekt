@@ -8,7 +8,6 @@ public abstract class obstacle implements Comparable<obstacle> {
 	protected int y;
 	protected Road road;
 	protected double position;
-	public ArrayList<obstacle> obstacles;
 	protected int number;
 
 	public obstacle(int uneposx, int uneposy, Road route) {
@@ -57,14 +56,6 @@ public abstract class obstacle implements Comparable<obstacle> {
 
 	public void setRoad(Road road) {
 		this.road = road;
-	}
-
-	public ArrayList<obstacle> getObstacles() {
-		return obstacles;
-	}
-
-	public void setObstacles(ArrayList<obstacle> o) {
-		obstacles = o;
 	}
 
 	public int compareTo(obstacle obs) {

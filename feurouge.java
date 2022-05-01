@@ -4,15 +4,15 @@ import java.util.*;
 
 public class feurouge extends obstacle implements Comparable<obstacle> {
 	protected Road voiebloq;
-	protected int temps;
-	private int timer;
+	protected double temps;
+	private double timer;
 	private int etat;
 
-	public feurouge(int uneposx, int uneposy, Road unevoiebloq, int untemps) {
+	public feurouge(int uneposx, int uneposy, Road unevoiebloq, int untemps, int state) {
 		super(uneposx, uneposy, unevoiebloq);
-		temps = untemps;
+		temps = (double)untemps;
 		timer = 0;
-		etat = 0;
+		etat = state;
 		number = 2;
 	}
 
@@ -47,7 +47,7 @@ public class feurouge extends obstacle implements Comparable<obstacle> {
 	}
 
 	public int getTimer() {
-		int time = timer;
+		int time = (int)timer;
 		return time;
 	}
 
@@ -56,15 +56,15 @@ public class feurouge extends obstacle implements Comparable<obstacle> {
 	}
 
 	public void update(int time) {
-		if (timer == temps) {
-			if (etat == 0) {
-				etat = 1;
-			} else if (etat == 1) {
-				etat = 2;
-			} else {
-				etat = 0;
-			}
-			timer = 0;
-		}
+        if (etat == 0 && timer == temps*1.2) {
+            etat = 1;
+            timer = 0;
+        } else if (etat == 1 && timer == temps*0.3) {
+            etat = 2;
+            timer = 0;
+        } else if (etat == 2 && timer == temps*1.5){
+            etat = 0;
+            timer = 0;
+        }
 	}
 }

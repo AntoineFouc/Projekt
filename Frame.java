@@ -22,6 +22,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.JRadioButton;
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
@@ -62,6 +63,12 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private JTextField valeurFeu;
 	private int valfeu;
 	private double time;
+    
+    //checkbox feu rouge
+    private JRadioButton cb1;
+    private JRadioButton cb2;
+    private JRadioButton cb3;
+    int etat;
 
 	// bouton limitation
 	private JButton boutonLimite;
@@ -209,7 +216,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		trash.setVisible(true);
 
 		// bouton feu rouge
-		boutonFeu = new JButton(new ImageIcon("Images/feurouge.png"));
+		boutonFeu = new JButton(new ImageIcon("Images/feuvert.png"));
 		boutonFeu.setBounds(20, 295, 60, 135);
 		boutonFeu.addMouseListener(this);
 		p2.add(boutonFeu);
@@ -222,6 +229,32 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(valeurFeu);
 		valeurFeu.setVisible(false);
 		valeurFeu.setVisible(true);
+        
+        // couleur feu rouge
+		cb1 = new JRadioButton("Vert");
+		cb1.setBounds(10, 480, 70, 30);
+		cb1.addMouseListener(this);
+		p2.add(cb1);
+		cb1.setVisible(false);
+		cb1.setVisible(true);
+        cb1.setSelected(true);
+        etat=0;
+        
+        cb2 = new JRadioButton("Orange");
+		cb2.setBounds(10, 510, 70, 30);
+		cb2.addMouseListener(this);
+		p2.add(cb2);
+		cb2.setVisible(false);
+		cb2.setVisible(true);
+        cb2.setSelected(false);
+        
+        cb3 = new JRadioButton("Rouge");
+		cb3.setBounds(10, 540, 70, 30);
+		cb3.addMouseListener(this);
+		p2.add(cb3);
+		cb3.setVisible(false);
+		cb3.setVisible(true);
+        cb3.setSelected(false);
 
 		// bouton limites
 		boutonLimite = new JButton(new ImageIcon("Images/limitation.png"));
@@ -303,6 +336,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			restart.setEnabled(false);
 			// init.setEnabled(true);
 			vehicules.clear(); // A changer
+            for (LinkedList<Vehicule> v : vehiculesParRoute) {
+                v.clear();
+            }
 			p1.repaint();
 			p1.getTimer().stop();
 			p1.setTime(0);
@@ -406,7 +442,25 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			} else {
 				select = false;
 			}
-		}
+		} else if (e.getSource() == cb1){
+            cb1.setSelected(true);
+            cb2.setSelected(false);
+            cb3.setSelected(false);
+            boutonFeu.setIcon(new ImageIcon("Images/feuvert.png"));
+            etat=0;
+        } else if (e.getSource() == cb2){
+            cb1.setSelected(false);
+            cb2.setSelected(true);
+            cb3.setSelected(false);
+            boutonFeu.setIcon(new ImageIcon("Images/feuorange.png"));
+            etat=1;
+        } else if (e.getSource() == cb3){
+            cb1.setSelected(false);
+            cb2.setSelected(false);
+            cb3.setSelected(true);
+            boutonFeu.setIcon(new ImageIcon("Images/feurouge.png"));
+            etat=2;
+        }
 	}
 
 	@Override
@@ -436,7 +490,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 					} else {
 						valfeu = 0;
 					}
-					feurouge feu = new feurouge(x, y, routes[pos], valfeu);
+					feurouge feu = new feurouge(x, y, routes[pos], valfeu, etat);
 					allObstacles.add(feu);
 					p1.repaint();
 				} else if (valeur.equals("limitation")) { // cas limitation
@@ -600,7 +654,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			switch (v.getPrio()) {
 			// cas voiture
 			case 1:
-				if(v.getNextVehicule().getSafePosition()<v.getFront()) {
+				if(v.getNextVehicule().getSafePosition()<v.getPosition()) {
 					v.deccelTo(v.getNextVehicule().getSpeed());
 				}else {
 					v.accel();

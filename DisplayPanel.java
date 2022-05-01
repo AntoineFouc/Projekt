@@ -104,33 +104,20 @@ public class DisplayPanel extends JPanel implements ActionListener {
 				newCar.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
 		} else {
-			if (Math.random() > 0.3) {
-                		Truck newTruck = new Truck(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
+			Truck newTruck = new Truck(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
 					0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
-                		frame.vehicules.add(newTruck);
-                		frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newTruck);
-                		if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
-                    			newTruck.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
-                		} else {
-                    			newTruck.setNextVehicule(null);
-                		}
-                		if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-                    			newTruck.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
-                		}
-				} else {
-                			Moto newMoto = new Moto(r, 0.2 + Math.random() * frame.getRapidite() * 0.001,
-						0.0015 + Math.random() * frame.getAggressivite() * 0.000005);
-                			frame.vehicules.add(newMoto);
-                			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newMoto);
-               				if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
-                    				newMoto.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
-                			} else {
-                    				newMoto.setNextVehicule(null);
-                			}
-                			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
-                    				newMoto.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
-                			}
-            			}
+			frame.vehicules.add(newTruck);
+			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newTruck);
+			if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
+				newTruck.setNextVehicule(frame.vehiculesParRoute.get(r.getOrientation() / 90).get(1));
+			} else {
+				newTruck.setNextVehicule(null);
+			}
+
+			if (frame.sortObstaclesRoute(r.getOrientation()).size() != 0) {
+				newTruck.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
+			}
+
 		}
 	}
 }

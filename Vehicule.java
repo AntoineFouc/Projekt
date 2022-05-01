@@ -151,7 +151,7 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public void setSafeDistance() {
-			safeDistance = 30 + (int) (speed * 100); // variation de la distance de securite en fonction de la vitesse du vehicule
+			safeDistance = size[0]*2 + (int) speed * 2; // 1 sec de réaction + 1 sec de freinage
 	}
 
 	public int getSafeDistance() {
