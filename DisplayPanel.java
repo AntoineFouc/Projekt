@@ -52,6 +52,12 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == timer) {
+			
+			if(time%4000 == 0){
+				flux /= 4.0;
+				frame.flux.setText("Flux (véhicules/s) : " + flux);
+				flux = 0;
+			}
 
 			if(frame.isAnAccident()) {
 				// frame.restart.doClick();
