@@ -54,6 +54,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	private JSlider trafic; // nombres de véhicules sur l'écran
 	private JSlider aggressivite; // agressivité des véhicules
 	private JLabel labelTime; // affichage du temps
+	public JLabel flux;
 	boolean démarré;
 	private javax.swing.Timer timer;
 
@@ -150,9 +151,16 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		restart.setVisible(false);
 		restart.setVisible(true);
 
+		flux = new JLabel();
+		flux.setText("Flux (véhicules/s) : 0");
+		flux.setBounds(30, 20, 280, 50);
+		p2.add(flux);
+		flux.setVisible(false);
+		flux.setVisible(true);
+
 		// curseur trafic
 		trafic = new JSlider(0, 100, 20);
-		trafic.setBounds(10, 10, 280, 50);
+		trafic.setBounds(10, 110, 280, 50);
 		trafic.setMinorTickSpacing(5);
 		trafic.setMajorTickSpacing(20);
 		trafic.setPaintTicks(true);
@@ -161,9 +169,16 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		trafic.setVisible(false);
 		trafic.setVisible(true);
 
+		JLabel l1 = new JLabel();
+		l1.setText("Quantité de trafic");
+		l1.setBounds(30, 140, 280, 50);
+		p2.add(l1);
+		l1.setVisible(false);
+		l1.setVisible(true);
+
 		// curseur aggressivite
 		aggressivite = new JSlider(0, 100, 20);
-		aggressivite.setBounds(10, 130, 280, 50);
+		aggressivite.setBounds(10, 180, 280, 50);
 		aggressivite.setMinorTickSpacing(5);
 		aggressivite.setMajorTickSpacing(20);
 		aggressivite.setPaintTicks(true);
@@ -171,6 +186,13 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		p2.add(aggressivite);
 		aggressivite.setVisible(false);
 		aggressivite.setVisible(true);
+
+		JLabel l2 = new JLabel();
+		l2.setText("Aggressivité des conducteurs");
+		l2.setBounds(30, 210, 280, 50);
+		p2.add(l2);
+		l2.setVisible(false);
+		l2.setVisible(true);
 
 		// timer
 		labelTime = new JLabel();
