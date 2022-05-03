@@ -12,7 +12,7 @@ public class Voiture extends Vehicule {
 		super(r, s, a);
 		size[0] = 40; // taille des voitures : longueur
 		size[1] = 20; // largeur
-		String pictureName = "Images/car-" + Integer.toString(Route.getOrientation()) + ".png";
+		String pictureName = "Images/car-" + Integer.toString(route.getOrientation()) + ".png";
 		picture = new ImageIcon(pictureName);
 		position = -size[0] / 2;
 	}

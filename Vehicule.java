@@ -17,19 +17,25 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	protected int prio = 0;
 	protected Vehicule nextVehicule;
 	protected int ObstaclesCompteur;
+    protected int second;
 	protected double stopStartTime;
 	protected boolean testStop = false;
-	protected int safeDistance; // cte pour le moment
+	protected double safeDistance; // cte pour le moment
 	protected int[] size = new int[2]; // taille longueur puis largeur
-	protected Route Route; // on assigne a une route a un vehicule
+	protected Route route; // on assigne a une route a un vehicule
 	protected ImageIcon picture;
 
 	public Vehicule(Route r, double s, double a) {
 		speed = s; // vitesse initiale
-		vitesseMax = s;
+		vitesseMax = s*1.3;
 		maxAccel = a;
 		accel = 0;
-		Route = r;
+		route = r;
+        if(route.getStartingPoint()[0]==route.getEndingPoint()[0]){
+            second=route.getStartingPoint()[0];
+        } else {
+            second=route.getStartingPoint()[1];
+        }
 	}
 
 	// Permet de changer la position du vehicule en fonction du temps
@@ -37,13 +43,13 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 		if (speed < 0.03 && accel<0) {
 			speed = 0.000;
 		}
-		speed += dt * accel;
-		position += dt * speed;
+        speed += dt * accel;
+        position += dt * speed;
 		setSafeDistance();
 	}
 
 	public void accel() {
-		if (speed > vitesseMax) {
+		if (speed > vitesseMax||accel>maxAccel) {
 			speed = vitesseMax;
 			accel = 0;
 		} else {
@@ -56,6 +62,9 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public void deccel() {
+        if (speed < 0) {
+			speed = 0;
+		}
 		accel = -maxAccel;
 	}
 
@@ -72,22 +81,22 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 
-		switch (Route.getOrientation()) {
+		switch (route.getOrientation()) {
 		case 0:
-			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] + (int) position - size[0] / 2.0),
-					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
+			g2d.drawImage(picture.getImage(), (int) (route.getStartingPoint()[0] + (int) position - size[0] / 2.0),
+					(int) (route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
 			break;
 		case 90:
-			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (Route.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0], null);
+			g2d.drawImage(picture.getImage(), (int) (route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (route.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0], null);
 			break;
 		case 180:
-			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] - (int) position - size[0] / 2.0),
-					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
+			g2d.drawImage(picture.getImage(), (int) (route.getStartingPoint()[0] - (int) position - size[0] / 2.0),
+					(int) (route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1], null);
 			break;
 		case 270:
-			g2d.drawImage(picture.getImage(), (int) (Route.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (Route.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0], null);
+			g2d.drawImage(picture.getImage(), (int) (route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (route.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0], null);
 			break;
 		}
 	}
@@ -99,7 +108,7 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public boolean equals(Vehicule v) {
-		return (v.getPosition() == position && Route.equals(v.getRoute()));
+		return (v.getPosition() == position && route.equals(v.getRoute()));
 	}
 
 	public double getPosition() {
@@ -135,7 +144,7 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public Route getRoute() {
-		return Route;
+		return route;
 	}
 
 	public void setPicture(ImageIcon i) {
@@ -151,19 +160,19 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public void setSafeDistance() {
-			safeDistance = 40 + (int) (speed * 100); // variation de la distance de securite en fonction de la vitesse du vehicule
+			safeDistance = (speed * 100) + size[0]*1.2 ; // variation de la distance de securite en fonction de la vitesse du vehicule
 	}
 
-	public int getSafeDistance() {
+	public double getSafeDistance() {
 		return safeDistance;
 	}
 
-	public int getSafePosition() {
-		return (int) getBack() - safeDistance;
+	public double getSafePosition() {
+		return getBack() - safeDistance;
 	}
 
-	public int getVision() {
-		return (int) getFront() + safeDistance;
+	public double getVision() {
+		return getFront() + safeDistance;
 	}
 
 	public int getFront() {
@@ -224,22 +233,22 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 
 	public Rectangle getRectangle() {
 		Rectangle r = new Rectangle();
-		switch (Route.getOrientation()) {
+		switch (route.getOrientation()) {
 		case 0:
-			r = new Rectangle((int) (Route.getStartingPoint()[0] + (int) position - size[0] / 2.0),
-					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
+			r = new Rectangle((int) (route.getStartingPoint()[0] + (int) position - size[0] / 2.0),
+					(int) (route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
 			break;
 		case 90:
-			r = new Rectangle((int) (Route.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (Route.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0]);
+			r = new Rectangle((int) (route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (route.getStartingPoint()[1] - (int) position - size[0] / 2.0), size[1], size[0]);
 			break;
 		case 180:
-			r = new Rectangle((int) (Route.getStartingPoint()[0] - (int) position - size[0] / 2.0),
-					(int) (Route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
+			r = new Rectangle((int) (route.getStartingPoint()[0] - (int) position - size[0] / 2.0),
+					(int) (route.getStartingPoint()[1] - size[1] / 2.0), size[0], size[1]);
 			break;
 		case 270:
-			r = new Rectangle((int) (Route.getStartingPoint()[0] - size[1] / 2.0),
-					(int) (Route.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0]);
+			r = new Rectangle((int) (route.getStartingPoint()[0] - size[1] / 2.0),
+					(int) (route.getStartingPoint()[1] + (int) position - size[0] / 2.0), size[1], size[0]);
 			break;
 		}
 		return r;
@@ -261,4 +270,23 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 		}
 		return res;
 	}
+    
+    public double getDistToKroof(carrefour kroof){
+        double kpos=0;
+        if((this.route).getOrientation()%180==0){ // route horizontale
+            kpos=kroof.getx();
+        } else { //route verticale
+            kpos=kroof.gety();
+        }
+        double dist=kpos-(int)position;
+        return dist;
+    }
+    
+    public double getDistToObstacle(Obstacle obs){
+        return(Math.abs(obs.getPosition()-this.getPosition()));
+    }
+    
+    public int getSecond(){
+        return second;
+    }
 }

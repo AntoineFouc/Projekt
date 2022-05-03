@@ -26,16 +26,24 @@ import javax.swing.JRadioButton;
 
 public class Frame extends JFrame implements ActionListener, MouseListener, KeyListener {
 
-	// tableau d'objets route
-	public Route[] routes = { new Route(800, 370, 0, 370), new Route(0, 430, 800, 430), new Route(370, 0, 370, 800),
-			new Route(430, 800, 430, 0) };
 
 	// l'arraylist contient les routes, les linkedlist les véhicules par route
 	public ArrayList<LinkedList<Vehicule>> vehiculesParRoute = new ArrayList<>();
+    public LinkedList<Vehicule> route0 = new LinkedList<>();
 	public LinkedList<Vehicule> route1 = new LinkedList<>();
 	public LinkedList<Vehicule> route2 = new LinkedList<>();
 	public LinkedList<Vehicule> route3 = new LinkedList<>();
 	public LinkedList<Vehicule> route4 = new LinkedList<>();
+    public carrefour cf;
+
+    
+    // tableau d'objets route
+    Route r0;
+    Route r1;
+    Route r2;
+    Route r3;
+    Route r4;
+	public Route[] routes;
 
 	// arraylist contenant tous les véhicules
 	public ArrayList<Vehicule> vehicules = new ArrayList<>(); // liste des vehicules PRESENTS
@@ -57,6 +65,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	public JLabel flux;
 	boolean démarré;
 	private javax.swing.Timer timer;
+
 
 	// bouton feu rouge
 	private JButton boutonFeu;
@@ -91,10 +100,18 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 
 	public Frame() {
 		// ajout des routes dans l'arraylist
+        vehiculesParRoute.add(route0);
 		vehiculesParRoute.add(route1);
 		vehiculesParRoute.add(route2);
 		vehiculesParRoute.add(route3);
 		vehiculesParRoute.add(route4);
+        r0=new Route(0,0,0,0, vehiculesParRoute.get(0));
+        r1=new Route(800, 370, 0, 370, vehiculesParRoute.get(1));
+        r2=new Route(0, 430, 800, 430, vehiculesParRoute.get(2));
+        r3=new Route(370, 0, 370, 800, vehiculesParRoute.get(3));
+        r4=new Route(430, 800, 430, 0, vehiculesParRoute.get(4));
+        routes = new Route[]{r1,r2,r3,r4};
+        cf=new carrefour(400,400,r0);
 
 		setTitle("K-Roof");
 		setLayout(null);
@@ -161,10 +178,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		// curseur trafic
 		trafic = new JSlider(0, 100, 20);
 		trafic.setBounds(10, 110, 280, 50);
-		trafic.setMinorTickSpacing(5);
-		trafic.setMajorTickSpacing(20);
+		trafic.setMinorTickSpacing(20);
+		trafic.setMajorTickSpacing(40);
 		trafic.setPaintTicks(true);
-		trafic.setPaintLabels(true);
+		trafic.setPaintLabels(false);
 		p2.add(trafic);
 		trafic.setVisible(false);
 		trafic.setVisible(true);
@@ -179,10 +196,10 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 		// curseur aggressivite
 		aggressivite = new JSlider(0, 100, 20);
 		aggressivite.setBounds(10, 180, 280, 50);
-		aggressivite.setMinorTickSpacing(5);
-		aggressivite.setMajorTickSpacing(20);
+		aggressivite.setMinorTickSpacing(20);
+		aggressivite.setMajorTickSpacing(40);
 		aggressivite.setPaintTicks(true);
-		aggressivite.setPaintLabels(true);
+		aggressivite.setPaintLabels(false);
 		p2.add(aggressivite);
 		aggressivite.setVisible(false);
 		aggressivite.setVisible(true);
@@ -242,7 +259,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
         
         // couleur feu rouge
 		cb1 = new JRadioButton("Vert");
-		cb1.setBounds(10, 480, 70, 30);
+		cb1.setBounds(10, 540, 70, 30);
 		cb1.addMouseListener(this);
 		p2.add(cb1);
 		cb1.setVisible(false);
@@ -259,7 +276,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
         cb2.setSelected(false);
         
         cb3 = new JRadioButton("Rouge");
-		cb3.setBounds(10, 540, 70, 30);
+		cb3.setBounds(10, 480, 70, 30);
 		cb3.addMouseListener(this);
 		p2.add(cb3);
 		cb3.setVisible(false);
@@ -319,6 +336,20 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 			}
 		}
 		if (e.getSource() == start) {
+            carrefour kroof;
+            for(int i=0;i<routes.length;i++){
+                if(routes[i].getOrientation()%180==0){
+                    kroof = new carrefour(370,routes[i].getStartingPoint()[1],routes[i]);
+                    obstacles.add(kroof);
+                    kroof = new carrefour(430,routes[i].getStartingPoint()[1],routes[i]);
+                    obstacles.add(kroof);
+                } else {
+                    kroof = new carrefour(routes[i].getStartingPoint()[0],370,routes[i]);
+                    obstacles.add(kroof);
+                    kroof = new carrefour(routes[i].getStartingPoint()[0],430,routes[i]);
+                    obstacles.add(kroof);
+                }
+            }
 			startTime = System.currentTimeMillis();
 			running = true;
 			démarré = true;
@@ -645,7 +676,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 						v.setPrio(1);
 					}
 				// la voiture i n'a ni suivante ni obstacle en face
-				}else {
+				} else {
 					v.setPrio(0);
 				}
 			}				
@@ -655,7 +686,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	// définit les actions des véhicules à l'arrivée sur un obstacle
 	/*
 	 * NOTE DEF PRIO 0 : default 1 : voiture 2 : feu rouge 3 : barrière 4 :
-	 * limitation de vitesse 5 : stop
+	 * limitation de vitesse 5 : stop : carrefour 8
 	 */
 	public void interaction() {
 		definePrio();
@@ -726,10 +757,27 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 						v.setPrio(0);
 					}
 				break;
+            case 7:
+                break;
+            case 8:
+                //carrefour
+                if(v.getDistToKroof(cf)<50){
+                for(Route r : routes){
+                    for(Vehicule v2 : vehicules){ //véhicules de cette route
+                        if(((v2.getRoute()).getOrientation()%180)!=((v.getRoute()).getOrientation()%180)){ //routes perpendiculaires
+                            if(v.getRoute().getSecond()-v2.getPosition()<40*v.getDistToKroof(cf)+v2.getSafeDistance()/10){ //dans la zone dangereuse
+                                //v.deccelTo(v.getSpeed()*0.97);
+                            }
+                        }
+                    }
+                }
+            }
+                break;
 			default:
 				v.accel();
 				break;
 			}
+
 		}
 
 	}

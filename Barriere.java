@@ -18,9 +18,9 @@ public class Barriere extends Obstacle implements Comparable<Obstacle> {
 
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		if (Route.getOrientation() == 270) {
+		if (route.getOrientation() == 270) {
 			g2d.drawImage(new ImageIcon("Images/barriere.png").getImage(), 351 - 15, y - 20, 62, 40, null); // route 3
-		} else if (Route.getOrientation() == 90) {
+		} else if (route.getOrientation() == 90) {
 			g2d.drawImage(new ImageIcon("Images/barriere.png").getImage(), 459 - 60, y - 20, 62, 40, null); // route 4
 		} else {
 			File file = new File("Images/barriere.png");
@@ -29,13 +29,13 @@ public class Barriere extends Obstacle implements Comparable<Obstacle> {
 				pic = ImageIO.read(file);
 			} catch (IOException e) {
 			}
-			if (Route.getOrientation() == 0) { // route 2
+			if (route.getOrientation() == 0) { // route 2
 				double rotationRequired = Math.toRadians(90);
 				AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, 20, 20);
 				AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 				g2d.drawImage(op.filter(pic, null), x, 459 - 60, 40, 62, null);
 				// rotation puis placement
-			} else if (Route.getOrientation() == 180) { // route 1
+			} else if (route.getOrientation() == 180) { // route 1
 				double rotationRequired = Math.toRadians(-90);
 				AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, 30, 30);
 				AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
