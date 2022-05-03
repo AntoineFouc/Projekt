@@ -53,7 +53,6 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == timer) {
-			
 			if(time%4000 == 0){
 				flux /= 4.0;
 				frame.flux.setText("Flux (véhicules/s) : " + flux);
@@ -68,7 +67,10 @@ public class DisplayPanel extends JPanel implements ActionListener {
 
 			for (Route r : frame.routes) {
 				if (frame.howManyVehicles(r) == 0 || frame.newVehicle(r)) {
-					if(Math.random()<(frame.getTrafic()*0.01 + 0.1)) addVehicle(r);
+					if(Math.random()<(frame.getTrafic()*0.01 + 0.1)){
+						flux += 1;
+						addVehicle(r);
+					}
 				}
 			}
 			// frame.classementEntites();
