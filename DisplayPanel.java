@@ -21,6 +21,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	private long t0;
 	private long tpause;
 	private Frame frame; // fenetre principale
+	private double flux;
 
 	public DisplayPanel(Frame f) {
 		timer = new Timer(dt, this);
