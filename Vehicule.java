@@ -53,6 +53,10 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 
 	public void stopAt(double x) {
 		accel = -Math.pow(speed, 2) / (x - position);
+		if(speed<0.03) {
+			speed = 0;
+			accel = 0;
+		}
 	}
 
 	public void deccel() {
@@ -151,7 +155,7 @@ public abstract class Vehicule implements Comparable<Vehicule> {
 	}
 
 	public void setSafeDistance() {
-			safeDistance = size[0] + (int) (speed * 100); // variation de la distance de securite en fonction de la vitesse du vehicule
+			safeDistance = 30 + (int) (speed * 100); // variation de la distance de securite en fonction de la vitesse du vehicule
 	}
 
 	public int getSafeDistance() {
