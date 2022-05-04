@@ -73,7 +73,7 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 	// bouton limitation
 	private JButton boutonLimite;
 	private JTextField valeurLimite;
-	private int vallim;
+	private double vallim;
 
 	// bouton barriere
 	private JButton boutonBarriere;
@@ -504,9 +504,9 @@ public class Frame extends JFrame implements ActionListener, MouseListener, KeyL
 					p1.repaint();
 				} else if (valeur.equals("limitation")) { // cas limitation
 					if (isInt(valeurLimite.getText())) {
-						vallim = Integer.valueOf(valeurLimite.getText());
+						vallim = (double) Integer.valueOf(valeurLimite.getText());
 					} else {
-						vallim = 0;
+						vallim = 0.0;
 					}
 					Limitation limite = new Limitation(x, y, routes[pos], vallim);
 					obstacles.add(limite);
