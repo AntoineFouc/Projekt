@@ -20,7 +20,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	private long tactuel;
 	private long t0;
 	private long tpause;
-    private double flux;
+    	private double flux;
 	private Frame frame; // fenetre principale
 
 	public DisplayPanel(Frame f) {
@@ -68,7 +68,10 @@ public class DisplayPanel extends JPanel implements ActionListener {
 
 			for (Route r : frame.routes) {
 				if (frame.howManyVehicles(r) == 0 || frame.newVehicle(r)) {
-					if(Math.random()<(frame.getTrafic()*0.01 + 0.1)) addVehicle(r);
+					if(Math.random()<(frame.getTrafic()*0.01 + 0.1)) {
+						flux += 1;
+						addVehicle(r);
+					}
 				}
 			}
 			// frame.classementEntites();
