@@ -7,7 +7,7 @@ public class Moto extends Vehicule {
 		super(r, s, a);
 		size[0] = 32; // taille des motos : longueur
 		size[1] = 14; // largeur
-		String pictureName = "Images/moto-" + Integer.toString(route.getOrientation()) + ".png";
+		String pictureName = "Images/moto-" + Integer.toString(Route.getOrientation()) + ".png";
 		picture = new ImageIcon(pictureName);
 		position = -size[0] / 2;
 	}

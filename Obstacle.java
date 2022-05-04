@@ -6,14 +6,14 @@ public abstract class Obstacle implements Comparable<Obstacle> {
 	protected String name = "default";
 	protected int x;
 	protected int y;
-	protected Route route;
+	protected Route Route;
 	protected double position;
 	protected int number;
 
-	public Obstacle(int uneposx, int uneposy, Route uneroute) {
+	public Obstacle(int uneposx, int uneposy, Route route) {
 		x = uneposx;
 		y = uneposy;
-		route = uneroute;
+		Route = route;
 
 	}
 
@@ -29,8 +29,8 @@ public abstract class Obstacle implements Comparable<Obstacle> {
 	}
 
 	public double getPosition() {
-		position = (x - route.getStartingPoint()[0]) * Math.cos(route.getOrientation() * Math.PI / 180)
-				+ (route.getStartingPoint()[1] - y) * Math.sin(route.getOrientation() * Math.PI / 180);
+		position = (x - Route.getStartingPoint()[0]) * Math.cos(Route.getOrientation() * Math.PI / 180)
+				+ (Route.getStartingPoint()[1] - y) * Math.sin(Route.getOrientation() * Math.PI / 180);
 		return position;
 	}
 
@@ -51,11 +51,11 @@ public abstract class Obstacle implements Comparable<Obstacle> {
 	}
 
 	public Route getRoute() {
-		return route;
+		return Route;
 	}
 
-	public void setRoute(Route route) {
-		this.route = route;
+	public void setRoute(Route Route) {
+		this.Route = Route;
 	}
 
 	public int compareTo(Obstacle obs) {

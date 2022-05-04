@@ -28,13 +28,13 @@ public class FeuRouge extends Obstacle implements Comparable<Obstacle> {
 			image = "Images/feurouge.png";
 		}
 
-		if (route.getOrientation() == 270)
+		if (Route.getOrientation() == 270)
 			g2d.drawImage(new ImageIcon(image).getImage(), 351 - 40, y - 135, 40, 135, null);
-		else if (route.getOrientation() == 90) {
+		else if (Route.getOrientation() == 90) {
 			g2d.drawImage(new ImageIcon(image).getImage(), 459 - 10, y - 135, 40, 135, null);
-		} else if (route.getOrientation() == 0)
+		} else if (Route.getOrientation() == 0)
 			g2d.drawImage(new ImageIcon(image).getImage(), x - 20, 459 - 20, 40, 135, null);
-		else if (route.getOrientation() == 180) {
+		else if (Route.getOrientation() == 180) {
 			g2d.drawImage(new ImageIcon(image).getImage(), x - 10, 351 - 135, 40, 135, null);
 		}
 	}
