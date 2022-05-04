@@ -60,7 +60,8 @@ public class DisplayPanel extends JPanel implements ActionListener {
 			}
 
 			if(frame.isAnAccident()) {
-				// frame.restart.doClick();
+				frame.restart.doClick();
+				Accident acc = new Accident();
 			}
 
 			time += dt;
@@ -119,7 +120,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         		newCamion.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
           	}
         } else {
-        	Moto newMoto = new Moto(r, 0.09+0.0001*frame.getAggressivite(), 0.0015 + Math.random() * frame.getAggressivite() * 0.00006);
+        	Moto newMoto = new Moto(r, 0.12+0.0001*frame.getAggressivite(), 0.0015 + Math.random() * frame.getAggressivite() * 0.00006);
         	frame.vehicules.add(newMoto);
             frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newMoto);
             if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
