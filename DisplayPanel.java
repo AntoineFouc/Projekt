@@ -61,7 +61,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
 			}
 
 			if(frame.isAnAccident()) {
-				// frame.restart.doClick();
+				frame.restart.doClick();
 			}
 
 			time += dt;
@@ -96,7 +96,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
 	
 	public void addVehicle(Route r) {
 		if (Math.random() < 0.85) {
-			Vehicule newVoiture = new Voiture(r,( 0.12 + Math.random() * frame.getAggressivite() * 0.0003)/4, 0.0000000001 + Math.random() * frame.getAggressivite() * 0.0000000001);
+			Vehicule newVoiture = new Voiture(r, 0.12 + Math.random() * frame.getAggressivite() * 0.0003, 0.0000000001 + Math.random() * frame.getAggressivite() * 0.0000000001);
 			frame.vehicules.add(newVoiture);
 			frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newVoiture);
 			if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
@@ -108,7 +108,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
 				newVoiture.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
 			}
 		} else if (Math.random() < 0.86) {
-            Camion newCamion = new Camion(r,( 0.07 + Math.random() * frame.getAggressivite() * 0.0003)/4, 0.00000000005 + Math.random() * frame.getAggressivite() * 0.00000000005);;
+            Camion newCamion = new Camion(r, 0.07 + Math.random() * frame.getAggressivite() * 0.0003, 0.00000000005 + Math.random() * frame.getAggressivite() * 0.00000000005);;
            	frame.vehicules.add(newCamion);
        		frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newCamion);
        		if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
@@ -120,7 +120,7 @@ public class DisplayPanel extends JPanel implements ActionListener {
         		newCamion.setNextObstacle(frame.sortObstaclesRoute(r.getOrientation()).get(0));
           	}
         } else {
-        	Moto newMoto = new Moto(r,( 0.1 + Math.random() * frame.getAggressivite() * 0.0003)/4, 0.00000000015 + Math.random() * frame.getAggressivite() * 0.0000000001);;
+        	Moto newMoto = new Moto(r, 0.1 + Math.random() * frame.getAggressivite() * 0.0003, 0.00000000015 + Math.random() * frame.getAggressivite() * 0.0000000001);;
         	frame.vehicules.add(newMoto);
             frame.vehiculesParRoute.get((int) r.getOrientation() / 90).addFirst(newMoto);
             if (frame.vehiculesParRoute.get(r.getOrientation() / 90).size() > 1) {
